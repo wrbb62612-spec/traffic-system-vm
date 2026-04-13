@@ -1,0 +1,56 @@
+services:
+  redis:
+    image: docker.m.daocloud.io/library/redis:7.2-alpine
+    container_name: redis-fs
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mysql:
+    image: docker.m.daocloud.io/library/mysql:8.0
+    container_name: mysql-traffic
+    environment:
+      MYSQL_ROOT_PASSWORD: root123456
+      MYSQL_DATABASE: traffic_db
+      MYSQL_USER: traffic_user
+      MYSQL_PASSWORD: Traffic2026!
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ../config/mysql:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-proot123456"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  mongodb:
+    image: docker.m.daocloud.io/library/mongo:7.0
+    container_name: mongo-traffic
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: Traffic2026!
+      MONGO_INITDB_DATABASE: traffic_events
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+      - ../config/mongodb:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --quiet -u admin -p Traffic2026! --authenticationDatabase admin --eval 'db.runCommand({ ping: 1 }).ok' | grep 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  redis-data:
+  mysql-data:
+  mongo-data:
