@@ -56,6 +56,15 @@ class Settings(BaseSettings):
     mysql_password: str = "Traffic2026!"
 
     mongo_uri: str = "mongodb://admin:Traffic2026!@127.0.0.1:27017/traffic_events?authSource=admin"
+    kafka_bootstrap_servers: str = "127.0.0.1:9092"
+    kafka_sensor_topic: str = "traffic.sensor.raw"
+    kafka_event_topic: str = "traffic.event.raw"
+    kafka_weather_topic: str = "traffic.weather.raw"
+    kafka_feature_topic: str = "traffic.feature.windowed"
+
+    flink_rest_url: str = "http://127.0.0.1:8081"
+    streaming_enabled: bool = True
+    stream_mode: str = "kafka"
 
 
 @lru_cache
