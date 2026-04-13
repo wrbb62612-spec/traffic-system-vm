@@ -1,0 +1,59 @@
+二、我建议你新建的文件
+
+这 3 个不是仓库原生自带的，而是为了你后续系统接入更方便，我建议你自己新建。
+
+4. sensor_meta.json
+
+建议放到你准备部署模型的目录里，比如：
+
+E:\4C\DCRNN\deploy\model_bundle\sensor_meta.json
+
+它建议由 graph_sensor_locations.csv 转出来，内容包含：
+
+index
+sensor_id
+latitude
+longitude
+5. scaler.json
+
+也建议放到同一个部署目录里：
+
+E:\4C\DCRNN\deploy\model_bundle\scaler.json
+
+里面存训练时标准化要用的：
+
+mean
+std
+
+因为线上推理时要做和训练一致的标准化/反标准化。
+
+6. infer_service.py
+
+这是你后端推理服务代码，建议不要放在原始训练目录里，单独放到部署目录，例如：
+
+E:\4C\DCRNN\deploy\infer_service.py
+
+如果你的大数据系统本身已经有后端工程，那更推荐放到你系统后端项目里，例如：
+
+你的系统后端项目\services\infer_service.py
+三、我推荐你最后整理成这个目录
+
+为了后续接入清晰，建议你新建一个部署包目录：
+
+E:\4C\DCRNN\deploy\model_bundle\
+
+然后把这些文件统一放进去：
+
+E:\4C\DCRNN\deploy\model_bundle\
+├─ config_20.yaml
+├─ checkpoint
+├─ models-2.9120-7875.index
+├─ models-2.9120-7875.data-00000-of-00001
+├─ adj_mx.pkl
+├─ graph_sensor_locations.csv
+├─ sensor_meta.json
+└─ scaler.json
+
+同时把服务代码放这里：
+
+E:\4C\DCRNN\deploy\infer_service.py

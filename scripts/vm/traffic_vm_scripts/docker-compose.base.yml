@@ -1,0 +1,65 @@
+services:
+  redis:
+    image: docker.m.daocloud.io/library/redis:7.2-alpine
+    container_name: redis-fs
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: >
+      redis-server
+      --appendonly yes
+      --appendfsync everysec
+      --maxmemory 512mb
+      --maxmemory-policy allkeys-lru
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  mysql:
+    image: docker.m.daocloud.io/library/mysql:8.0
+    container_name: mysql-traffic
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: Traffic2026!
+      MYSQL_DATABASE: traffic_db
+      MYSQL_USER: traffic_user
+      MYSQL_PASSWORD: Traffic2026!
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ../config/mysql:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pTraffic2026!"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+
+  mongodb:
+    image: docker.m.daocloud.io/library/mongo:7.0
+    container_name: mongo-traffic
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: Traffic2026!
+      MONGO_INITDB_DATABASE: traffic_events
+    volumes:
+      - mongo-data:/data/db
+      - ../config/mongodb:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mongosh", "-u", "admin", "-p", "Traffic2026!", "--authenticationDatabase", "admin", "--eval", "db.adminCommand('ping')"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  redis-data:
+  mysql-data:
+  mongo-data:

@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+pydantic>=2.7
+pydantic-settings
+langchain
+langgraph
+openai
+numpy
