@@ -79,3 +79,7 @@ model_bundle/checkpoint
 # Local scripts / caches
 # =========================
 .cache/
+
+flink-job/flink-job/target/
+*.class
+*.jar
