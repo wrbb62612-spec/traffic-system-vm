@@ -121,7 +121,14 @@ export default function BottomTimeline({ onTimeChange, onPredictionModeChange })
         <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexShrink: 0 }}>
           {/* Rewind */}
           <button
-            onClick={() => setCurrentTime(prev => Math.max(0, prev - 1))}
+            onClick={() =>
+       		setCurrentTime((prev) => {
+  		const next = Math.max(0, prev - 1);
+  		onTimeChange?.(next);
+    		return next;
+  		})
+		}
+
             style={{
               width: 26, height: 26,
               background: 'rgba(0,195,255,0.08)',
@@ -162,7 +169,13 @@ export default function BottomTimeline({ onTimeChange, onPredictionModeChange })
 
           {/* Forward */}
           <button
-            onClick={() => setCurrentTime(prev => Math.min(47, prev + 1))}
+            onClick={() =>
+  setCurrentTime((prev) => {
+    const next = Math.min(47, prev + 1);
+    onTimeChange?.(next);
+    return next;
+  })
+}
             style={{
               width: 26, height: 26,
               background: 'rgba(0,195,255,0.08)',

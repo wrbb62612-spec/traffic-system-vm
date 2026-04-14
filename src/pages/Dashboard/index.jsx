@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import MapView from "./MapView.jsx";
 import LeftPanel from "./LeftPanel.jsx";
 import RightPanel from "./RightPanel.jsx";
@@ -10,7 +10,7 @@ import {
 } from "../../api/datastore";
 
 // predWindow → DCRNN horizon
-const PRED_TO_HORIZON = { 0: 1, 15: 3, 30: 6, 60: 12 };
+const PRED_TO_HORIZON = { 15: 3, 30: 6, 60: 12 };
 
 export default function Dashboard() {
   const [timeOffset, setTimeOffset] = useState(0);
@@ -19,6 +19,7 @@ export default function Dashboard() {
   const [sampleIdx, setSampleIdx] = useState(47); // 0-47
   const [cachePoints, setCachePoints] = useState([]);
   const [cacheLoading, setCacheLoading] = useState(false);
+  const [cacheMode, setCacheMode] = useState(false);
   const [showDebugPanel, setShowDebugPanel] = useState(true);
 
   const currentHorizon = PRED_TO_HORIZON[predWindow] ?? 1;
@@ -26,23 +27,37 @@ export default function Dashboard() {
   const handleTimeChange = useCallback((timeIdx) => {
     setTimeOffset(timeIdx * 30);
     setSampleIdx(timeIdx % 48);
-  }, []);
 
-  const handlePredictionMode = useCallback((windowMinutes) => {
-    setShowPrediction(windowMinutes > 0);
-    setTimeOffset(windowMinutes);
-    setPredWindow(windowMinutes);
-  }, []);
+    // 一旦播放/拖动时间轴，就退出 Redis 缓存模式，恢复 sample 播放
+    if (cacheMode) {
+      setCacheMode(false);
+      setCachePoints([]);
+    }
+  }, [cacheMode]);
+
+const handlePredictionMode = useCallback((windowMinutes) => {
+  setShowPrediction(windowMinutes > 0);
+  setTimeOffset(windowMinutes);
+  setPredWindow(windowMinutes);
+
+  // 点击“实时”时，主动退出 Redis 缓存模式
+  if (windowMinutes === 0) {
+    setCacheMode(false);
+    setCachePoints([]);
+  }
+}, []);
 
   const handleLoadCacheHeatmap = useCallback(async () => {
     try {
       setCacheLoading(true);
       const points = await getPredictionPointsFromCache(["1001"], currentHorizon);
       setCachePoints(points || []);
+      setCacheMode(true);
       console.log("缓存热力图 points:", points);
     } catch (error) {
       console.error("读取缓存热力图失败:", error);
       setCachePoints([]);
+      setCacheMode(false);
     } finally {
       setCacheLoading(false);
     }
@@ -54,14 +69,45 @@ export default function Dashboard() {
       await runPredictFromFeatureStore(["1001"], 12);
       const points = await getPredictionPointsFromCache(["1001"], currentHorizon);
       setCachePoints(points || []);
+      setCacheMode(true);
       console.log("预测后缓存热力图 points:", points);
     } catch (error) {
       console.error("从 feature store 触发预测失败:", error);
       setCachePoints([]);
+      setCacheMode(false);
     } finally {
       setCacheLoading(false);
     }
   }, [currentHorizon]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    if (!cacheMode) return;
+
+    (async () => {
+      try {
+        setCacheLoading(true);
+        const points = await getPredictionPointsFromCache(["1001"], currentHorizon);
+        if (!cancelled) {
+          setCachePoints(points || []);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          console.error("切换 horizon 后读取缓存失败:", error);
+          setCachePoints([]);
+        }
+      } finally {
+        if (!cancelled) {
+          setCacheLoading(false);
+        }
+      }
+    })();
+
+  return () => {
+    cancelled = true;
+  };
+}, [cacheMode, currentHorizon]);
 
   return (
     <div
