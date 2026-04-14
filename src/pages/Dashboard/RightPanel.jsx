@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { AGENT_DECISIONS, SIMULATION_RESULTS, generateSystemLogs } from '../../data/trafficData';
+import RealtimeNodeFeaturePanel from "../../components/RealtimeNodeFeaturePanel";
 
 // ============================================================
 // RIGHT PANEL - Agent Decision & Simulation Results
@@ -504,6 +505,7 @@ export default function RightPanel() {
           <ComparisonBar />
         </div>
       </div>
+      <RealtimeNodeFeaturePanel initialNodeId="1001" />
 
       {/* System Log */}
       <div className="panel" style={{ flex: 1, minHeight: 140 }}>
