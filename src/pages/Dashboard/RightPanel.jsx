@@ -164,7 +164,7 @@ function SimulationRadar() {
 
 // Before/After Comparison Bar Chart
 function ComparisonBar() {
-  const { indicators, before, after, improvement } = SIMULATION_RESULTS;
+  const { before, after } = SIMULATION_RESULTS;
   const shortLabels = ['路网均速', '拥堵比例', '延误时间', '通行效率', '总里程'];
   const option = {
     backgroundColor: 'transparent',
