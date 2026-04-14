@@ -571,6 +571,26 @@ https://github.com/wrbb62612-spec/traffic-system-vm
 
 ---
 
+### 13.10 窗口聚合链路验证结果
+
+已完成如下端到端验证：
+
+1. 通过 `/datastore/ingest/sensor` 接口写入模拟传感器数据到 Kafka 原始主题 `traffic.sensor.raw`
+2. Flink 作业从 `traffic.sensor.raw` 消费数据并按 10 秒事件时间窗口聚合
+3. 聚合结果输出到 Kafka 主题 `traffic.feature.windowed`
+4. Python consumer 从 `traffic.feature.windowed` 消费并写入 Redis Feature Store
+5. 后端通过 `/datastore/feature/current/{node_id}` 和 `/datastore/feature/history/{node_id}` 成功读取窗口特征
+6. 已验证同一节点产生多个连续窗口，`sample_count` 与窗口均值随输入数据变化而变化
+7. 预测接口与热力图缓存接口仍可正常返回结果
+
+示例验证结果：
+
+- `feature:node:1001:history` 已累计多个窗口记录
+- 窗口样本数示例：1、2、1、2
+- 窗口平均速度示例：49.2、50.7、52.0、52.8
+
+- --
+
 ## 14. 仓库当前状况说明
 
 ### 14.1 主仓库定位
@@ -659,13 +679,13 @@ https://github.com/wrbb62612-spec/traffic-system-vm
 
 ### 14.5 当前仍在进行中的部分
 
-以下内容已经开始，但还没有作为最终稳定版完全收口：
+以下内容仍可继续完善，但核心链路已经完成：
 
-- Flink 当前还是透传版 Job
-- Flink 还未升级到窗口聚合版
-- Python consumer 还没有完全替换为消费 traffic.feature.windowed
 - 自启动脚本与 systemd 服务还没补完
-- README 还没有完全同步“二阶段实际状态”
+- README 还需要继续同步前端实时特征面板等新能力
+- 当前 infer_service 仍是 npz-offline 回放模式
+- 还未切换为真实 TensorFlow checkpoint 在线推理
+- 多节点联合预测与自动周期刷新还可以继续增强
 
 ---
 
@@ -678,8 +698,9 @@ https://github.com/wrbb62612-spec/traffic-system-vm
 其中：
 
 - 主系统链路已经稳定可用
-- 二阶段实时流处理链路已经打通
-- 当前处于“从 Flink 透传版升级到 Flink 窗口聚合版”的过渡阶段
+- Kafka → Flink 窗口聚合 → traffic.feature.windowed → Redis Feature Store 已打通
+- /datastore/ingest/sensor → /datastore/feature/current/history → /datastore/predict/from-feature-store 已完成端到端验证
+- 当前系统已从“Flink 透传版”升级为“窗口聚合版”
 
 ---
 
