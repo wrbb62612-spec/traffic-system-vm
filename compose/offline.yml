@@ -1,0 +1,34 @@
+services:
+  minio:
+    image: docker.m.daocloud.io/minio/minio:latest
+    container_name: traffic-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio-data:/data
+
+  minio-init:
+    image: docker.m.daocloud.io/minio/mc:latest
+    container_name: traffic-minio-init
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      sleep 8;
+      mc alias set local http://minio:9000 minioadmin minioadmin123;
+      mc mb -p local/traffic-raw || true;
+      mc mb -p local/traffic-feature || true;
+      mc mb -p local/traffic-dataset || true;
+      mc mb -p local/traffic-model || true;
+      mc mb -p local/traffic-replay || true;
+      echo 'minio buckets ready';
+      exit 0;
+      "
+
+volumes:
+  minio-data:
