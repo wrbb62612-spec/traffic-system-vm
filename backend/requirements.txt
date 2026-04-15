@@ -6,3 +6,10 @@ langchain
 langgraph
 openai
 numpy
+
+requests
+redis
+pymysql
+pymongo
+kafka-python
+minioflask

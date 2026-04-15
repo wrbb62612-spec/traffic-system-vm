@@ -1,502 +1,351 @@
-# traffic-system-vm
+traffic-system-vm
 
-基于虚拟机部署的城市交通智能预测与可视化系统。  
-本项目完成了前后端联调、DCRNN 预测服务接入，并在此基础上接入 Redis / MySQL / MongoDB 大数据底座，形成了 **Feature Store → 预测服务 → Redis 缓存 → 前端热力图展示** 的完整链路。
+基于虚拟机部署的城市交通智能预测与可视化系统。
 
----
-
-## 1. 项目简介
-
-本系统面向城市交通拥堵预测与辅助决策场景，核心能力包括：
-
-- 交通路网可视化展示
-- 基于 DCRNN 的拥堵预测热力图展示
-- Feature Store（Redis）特征读写
-- 后端从 Feature Store 触发预测
-- 预测结果缓存与回写
-- 大屏前端联动展示
-
-当前版本已完成在 Ubuntu Server 虚拟机中的部署与运行，并已上传到 GitHub 进行版本管理。
+本项目面向城市交通拥堵预测与辅助决策场景，当前已经完成前端、后端、推理服务、大数据底座、实时流处理、Feature Store、预测缓存以及离线归档链路的联通与验证，形成了一个“可运行、可演示、可扩展”的工程化原型系统。
 
 ---
 
-## 2. 当前实现架构
+1. 项目简介
 
-系统整体由以下几部分组成：
+本系统的核心目标是构建一个面向城市交通场景的综合智能预测平台，支持：
 
-### 前端
+- 城市路网可视化展示
+- 实时传感器数据接入与流处理
+- 基于 DCRNN 的交通预测
+- Feature Store 驱动预测
+- 预测结果缓存与热力图展示
+- 离线归档与轻量批处理统计
+- 为后续多智能体协同决策提供数据与预测基础
+
+当前系统已在 Ubuntu Server 虚拟机中完成部署，并已实现实时链路和离线链路的分层运行。
+
+---
+
+2. 当前最新状态
+
+2.1 已稳定可用的主链路
+
+当前已经稳定可用的主系统链路为：
+
+前端 → FastAPI 后端 → Redis Feature Store → infer_service → Redis 预测缓存 → 前端热力图展示
+
+当前已经验证通过：
+
+- 前端大屏可运行
+- FastAPI 后端可运行
+- infer_service 可运行
+- Redis / MySQL / MongoDB 可运行
+- Feature Store current/history 可读写
+- /datastore/predict/from-feature-store 已跑通
+- Redis 预测缓存已生成
+- 前端热力图可读取缓存展示
+
+2.2 已跑通的实时流处理链路
+
+当前实时链路已经跑通：
+
+Kafka 原始主题 traffic.sensor.raw  
+
+→ Flink 窗口聚合 Job  
+
+→ Kafka 特征主题 traffic.feature.windowed  
+
+→ Python consumer  
+
+→ Redis Feature Store  
+
+→ 后端预测接口
+
+当前已经验证：
+
+- /datastore/ingest/sensor 可写入 Kafka
+- Flink Job 可运行
+- traffic.feature.windowed 可输出窗口聚合结果
+- Redis 中已生成 feature:node:{id}:history
+- 后端可从 Redis 历史窗口触发预测
+
+2.3 第三阶段已新增并验证的离线链路
+
+当前已经新增并验证的第三阶段离线链路为：
+
+Redis Feature Store  
+
+→ MinIO 离线归档  
+
+→ 本地下载  
+
+→ 轻量离线批处理统计
+
+当前已经完成：
+
+- MinIO 对象存储部署
+- Redis 历史窗口导出到 MinIO
+- MinIO 归档对象下载到本地目录
+- 本地轻量批处理脚本读取 jsonl 并输出统计摘要
+
+---
+
+3. 当前实现架构
+
+系统当前可分为 6 层：
+
+3.1 前端展示层
+
 - React + Vite
-- 交通大屏展示
+- 城市交通大屏
 - 地图热力图展示
 - Feature Store 调试面板
-- 预测缓存加载与联动
+- Redis 预测缓存联动展示
 
-### 后端
+3.2 业务后端层
+
 - FastAPI
-- 提供业务接口、预测接口、数据存储接口
-- 从 Redis 中读取历史窗口
-- 调用 DCRNN 推理服务
-- 将预测结果写回 Redis / MongoDB
+- 提供业务接口、预测接口、数据接口
+- 从 Redis 读取历史窗口特征
+- 调用独立推理服务
+- 将预测结果回写 Redis / MongoDB
 
-### 预测服务
-- `model_bundle/infer_service.py`
-- 当前版本为 **npz-offline 推理服务**
-- 使用预先生成的预测结果文件进行离线预测回放 / 匹配
-- 支持 `/health`、`/predict`、`/heatmap` 等接口
+3.3 推理服务层
 
-### 大数据底座
-- **Redis**
-  - 作为 Feature Store
-  - 存储 current / history 特征
-  - 缓存最近一次预测结果
-- **MySQL**
-  - 存储结构化业务数据
-  - 存储系统配置与报告索引
-- **MongoDB**
-  - 存储预测记录
-  - 存储非结构化事件 / 推理快照
+- model_bundle/infer_service.py
+- 当前为 replay 模式
+- 基于 dcrnn_predictions.npz 提供 npz-offline 推理能力
+- 提供 /health、/predict、/heatmap、/predict-and-cache
 
----
+3.4 数据底座层
 
-## 3. 当前已经完成的能力
+- Redis：Feature Store、预测缓存
+- MySQL：结构化业务数据
+- MongoDB：预测记录、非结构化结果
 
-### 基础部署
-- [x] Ubuntu Server 虚拟机部署
-- [x] Xshell / Xftp 远程连接
-- [x] Node.js / npm 环境安装
-- [x] Python venv 环境安装
-- [x] Docker 环境安装
+3.5 实时流处理层
 
-### 系统运行
-- [x] 前端成功运行
-- [x] FastAPI 后端成功运行
-- [x] DCRNN 推理服务成功运行
-- [x] 前后端联调成功
+- Kafka：原始流与特征流主题
+- Flink：窗口聚合与实时特征构建
+- consumer：从 Kafka 特征主题写入 Redis Feature Store
 
-### 大数据底座
-- [x] Redis 容器部署
-- [x] MySQL 容器部署
-- [x] MongoDB 容器部署
-- [x] `/datastore/health` 三库连通检查成功
+3.6 离线仓库与批处理层
 
-### Feature Store 与预测链路
-- [x] Redis current 特征写入 / 读取
-- [x] Redis history 特征写入 / 读取
-- [x] DCRNN 输入预览接口
-- [x] 从 Feature Store 触发预测
-- [x] 预测结果回写 Redis 缓存
-- [x] 预测结果写入 MongoDB
-- [x] 前端热力图读取 Redis 预测缓存并展示
+- MinIO：离线对象存储
+- 本地批处理脚本：轻量统计与离线分析入口
+- 后续可继续扩展为 Spark / 训练集构建 / 模型资产管理
 
 ---
 
-## 4. 项目目录结构
+4. 项目目录结构
 
-```text
-traffic-system-vm/
-├── src/                            # 前端源码
-│   ├── api/                        # 前端接口封装
-│   ├── components/                 # 通用组件
-│   ├── pages/                      # 页面
-│   │   └── Dashboard/              # 大屏页面与地图组件
-│   └── data/                       # 前端静态数据
-│
-├── backend/                        # FastAPI 后端
-│   ├── app/
-│   │   ├── api/routes/             # 路由层
-│   │   ├── core/                   # 配置层
-│   │   └── services/               # 服务层
-│   ├── data/                       # 本地运行数据
-│   └── venv/                       # 后端虚拟环境（本地部署）
-│
-├── model_bundle/                   # DCRNN 推理服务与模型相关文件
-│   ├── infer_service.py
-│   ├── sensor_meta.json
-│   ├── scaler.json
-│   ├── adj_mx.pkl
-│   └── dcrnn_predictions.npz
-│
-├── scripts/                        # VM 启动脚本、Docker 脚本等
-└── README.md
-```
-
----
-
-## 5. 运行环境
-
-操作系统  
-Ubuntu Server 22.04  
-
-前端  
-Node.js  
-npm  
-
-后端  
-Python 3.10  
-FastAPI  
-Uvicorn  
-
-大数据底座  
-Docker  
-Redis  
-MySQL  
-MongoDB  
-
----
-
-## 6. 启动方式
-
-### 6.1 启动前端
-
-```bash
-cd /opt/traffic-system
-npm run dev -- --host 0.0.0.0 --port 5173
-```
-
-浏览器访问：
-
-```
-http://127.0.0.1:5173
-```
-
-### 6.2 启动后端
-
-```bash
-cd /opt/traffic-system/backend
-source venv/bin/activate
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-```
-
-接口文档：
-
-```
-http://127.0.0.1:8000/docs
-```
-
-### 6.3 启动 DCRNN 推理服务
-
-```bash
-cd /opt/traffic-system/model_bundle
-source venv/bin/activate
-python infer_service.py --npz-path /opt/traffic-system/model_bundle/dcrnn_predictions.npz --port 5001
-```
-
-健康检查：
-
-```
-http://127.0.0.1:5001/health
-```
-
-### 6.4 启动大数据底座
-
-```bash
-cd /opt/traffic-dw/compose
-docker compose up -d
-docker compose ps
-```
+    traffic-system-vm/
+    ├── src/                                   # 前端源码
+    │   ├── api/                               # 前端接口封装
+    │   ├── components/                        # 通用组件
+    │   ├── pages/                             # 页面
+    │   └── data/                              # 前端静态数据
+    │
+    ├── backend/                               # FastAPI 后端
+    │   ├── app/
+    │   │   ├── api/routes/                    # 路由层
+    │   │   ├── core/                          # 配置层
+    │   │   └── services/                      # 服务层
+    │   ├── data/
+    │   ├── requirements.txt
+    │   └── .env
+    │
+    ├── model_bundle/                          # DCRNN 推理服务与模型资产
+    │   ├── infer_service.py
+    │   ├── dcrnn_predictions.npz
+    │   ├── sensor_meta.json
+    │   ├── scaler.json
+    │   ├── adj_mx.pkl
+    │   ├── graph_sensor_locations.csv
+    │   ├── config_20.yaml
+    │   ├── checkpoint/
+    │   └── manifest.json
+    │
+    ├── flink-job/                             # Flink Job Maven 工程
+    │
+    ├── scripts/
+    │   ├── backend/
+    │   │   └── start_backend_dcrnn.sh         # 启动后端并切换为 dcrnn 预测器
+    │   ├── model/
+    │   │   ├── start_infer_service_mode.sh    # 按模式启动 infer_service
+    │   │   └── check_infer_service.sh         # 检查 infer_service 健康状态
+    │   ├── offline/
+    │   │   ├── start_offline_infra.sh         # 启动离线底座
+    │   │   ├── run_offline_pipeline.sh        # 一键跑离线归档与统计
+    │   │   ├── export_redis_history_to_minio.py
+    │   │   └── download_feature_from_minio.py
+    │   └── streaming/
+    │       └── consume_sensor_to_redis.py     # Kafka 特征流写入 Redis
+    │
+    ├── docs/
+    │   ├── infer_service_mode.md
+    │   └── stage3_offline_progress.md
+    │
+    └── README.md
 
 ---
 
-## 7. 关键接口说明
+5. 运行环境
 
-### 7.1 数据底座健康检查
+操作系统
 
-```
-GET /datastore/health
-```
+- Ubuntu Server 22.04
 
-功能：
+前端
 
-检查 Redis / MySQL / MongoDB 是否可用
+- Node.js
+- npm
+- Vite
+- React
 
-### 7.2 读取当前特征
+后端
 
-```
-GET /datastore/feature/current/{node_id}
-```
+- Python 3.10
+- FastAPI
+- Uvicorn
 
-示例：
+推理服务
 
-```
-GET /datastore/feature/current/1001
-```
+- Python
+- Flask
+- NumPy
 
-### 7.3 写入当前特征
+大数据与存储
 
-```
-POST /datastore/feature/current/{node_id}
-```
-
-请求体示例：
-
-```json
-{
-  "speed": 35.5,
-  "time_of_day": 0.42
-}
-```
-
-### 7.4 读取历史特征
-
-```
-GET /datastore/feature/history/{node_id}
-```
-
-示例：
-
-```
-GET /datastore/feature/history/1001
-```
-
-### 7.5 写入历史特征
-
-```
-POST /datastore/feature/history/{node_id}
-```
-
-请求体示例：
-
-```json
-{
-  "speed": 35.5,
-  "time_of_day": 0.42
-}
-```
-
-### 7.6 DCRNN 输入预览
-
-```
-GET /datastore/feature/dcrnn-input?node_ids=1001&steps=12
-```
-
-功能：
-
-从 Redis 历史窗口中读取特征  
-按时间顺序组装为模型输入预览
-
-### 7.7 从 Feature Store 触发预测
-
-```
-POST /datastore/predict/from-feature-store?node_ids=1001&steps=12
-```
-
-功能：
-
-从 Redis 读取历史窗口  
-转发给 infer_service  
-返回预测结果  
-同时将预测结果回写 Redis 缓存与 MongoDB
-
-### 7.8 获取最新预测缓存
-
-```
-GET /datastore/predict/cache/latest?node_ids=1001
-```
-
-功能：
-
-从 Redis 中读取最近一次预测缓存  
-前端热力图优先使用该缓存结果
+- Docker
+- Redis
+- MySQL
+- MongoDB
+- Kafka
+- Flink
+- MinIO
 
 ---
 
-## 8. 当前前端联动逻辑
+6. 固定启动流程（当前稳定版）
 
-当前前端大屏已接入缓存预测链路：
+建议按下面顺序启动，避免链路未就绪导致接口报错。
 
-在调试面板中写入 history 特征  
-调用 Run Predict + Load Cache  
-后端从 Redis 读取历史窗口  
-调用 DCRNN 推理服务  
-将预测结果写入 Redis 缓存  
-MapView 优先读取 Redis 缓存热力图点  
-地图热力图完成刷新展示
-
-当前页面中可看到：
-
-Redis 预测缓存  
-缓存点数  
-Redis 缓存预测 +5min / +15min / +30min / +60min
-
----
-
-## 9. 当前版本说明
-
-### 已实现
-- VM 部署
-- 前后端运行
-- DCRNN 推理服务接入
-- Redis / MySQL / MongoDB 接入
-- Feature Store 驱动预测
-- Redis 缓存预测热力图联动展示
-
-### 当前限制
-- 当前 `infer_service.py` 仍为 npz-offline 模式
-- 即使用预先生成的预测结果进行样本匹配 / 回放
-- 目前尚未切换为真实 TensorFlow checkpoint 在线前向推理
-
----
-
-## 10. 后续计划
-
-- 将调试按钮收口为正式业务按钮
-- 支持自动刷新预测缓存
-- 支持更多节点 / 多节点联合预测
-- 将结果更完整地落入 MongoDB / MySQL
-- 接入 Kafka / Flink 等实时流处理组件
-- 升级为真实在线 DCRNN 推理服务
-
----
-
-## 11. GitHub 仓库
-
-当前项目仓库：
-
-https://github.com/wrbb62612-spec/traffic-system-vm
-
----
-
-## 12. 说明
-
-本项目当前版本重点在于：
-
-完成系统在 VM 环境中的可运行部署  
-完成大数据底座与业务系统的联通  
-完成从 Feature Store 到预测热力图展示的完整链路验证
-
-因此，它已经具备较强的演示价值、答辩价值和后续扩展基础。
-
-## 13. 固定启动流程（当前稳定版）
-
-建议严格按下面顺序启动。
-
-当前系统的稳定运行依赖：前端、后端、推理服务、数据库底座、Kafka/Flink、consumer、Flink Job。
-
-其中前端 / 后端 / 推理服务的基础启动方式与当前运行记录一致 ，主仓库 README 也已经记录了基础启动入口和主系统结构 。
-
----
-
-### 13.1 启动顺序总览
-
-固定顺序如下：
-
-1. 启动数据库与流处理底座
-2. 启动前端
-3. 启动后端
-4. 启动 DCRNN 推理服务
-5. 启动 Kafka → Redis consumer
-6. 编译并提交 Flink Job
-7. 验证 Kafka / Redis / 预测链路
-
----
-
-### 13.2 终端 1：启动数据库与流处理底座
-
-1）启动基础数据库底座
+6.1 终端 1：启动数据库、对象存储与流处理底座
 
     cd /opt/traffic-dw/compose
+    
+    # 基础数据库底座
     docker compose up -d
-
-2）启动 Kafka + Flink
-
-    cd /opt/traffic-dw/compose
+    
+    # 离线对象存储
+    docker compose -f offline.yml up -d
+    
+    # Kafka + Flink
     docker compose -f streaming.yml up -d
 
-3）检查容器状态
+检查状态：
 
     docker compose ps
+    docker compose -f offline.yml ps
     docker compose -f streaming.yml ps
     docker ps
 
-正常情况下应至少看到：
+至少应看到：
 
 - redis-fs
 - mysql-traffic
 - mongo-traffic
+- traffic-minio
 - traffic-kafka
 - traffic-flink-jobmanager
 - traffic-flink-taskmanager
 
 ---
 
-### 13.3 终端 2：启动前端
+6.2 终端 2：启动前端
 
     cd /opt/traffic-system
     npm install
     npm run dev -- --host 0.0.0.0 --port 5173
 
-浏览器访问：
+访问地址：
 
     http://127.0.0.1:5173
 
-当前运行记录中也已固定建议前端使用该命令启动
+---
+
+6.3 终端 3：启动 replay 模式推理服务
+
+    cd /opt/traffic-system/backend
+    source venv/bin/activate
+    
+    export INFER_SERVICE_MODE=replay
+    export INFER_SERVICE_PORT=5001
+    export INFER_SERVICE_REPLAY_NPZ=/opt/traffic-system/model_bundle/dcrnn_predictions.npz
+    
+    /opt/traffic-system/scripts/model/start_infer_service_mode.sh
+
+健康检查：
+
+    cd /opt/traffic-system/backend
+    source venv/bin/activate
+    export INFER_SERVICE_PORT=5001
+    /opt/traffic-system/scripts/model/check_infer_service.sh
+
+说明：
+
+- 当前默认使用 replay 模式
+- 当前底层 backend 为 npz-offline
+- live 模式当前仅预留入口，尚未提供稳定实现
 
 ---
 
-### 13.4 终端 3：启动后端
+6.4 终端 4：启动后端（dcrnn 模式）
 
-    cd /opt/traffic-system/backend
-    python3 -m venv venv
-    source venv/bin/activate
-    pip install -r requirements.txt
-    uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+推荐直接使用脚本：
+
+    /opt/traffic-system/scripts/backend/start_backend_dcrnn.sh
+
+它会自动将后端切到：
+
+- PREDICTOR_BACKEND=dcrnn
+- INFER_SERVICE_URL=http://127.0.0.1:5001
 
 接口文档：
 
     http://127.0.0.1:8000/docs
 
-当前运行规范中也已固定后端以 uvicorn app.main:app 启动
+如果只想手动启动：
 
----
-
-### 13.5 终端 4：启动 DCRNN 推理服务
-
-    cd /opt/traffic-system/model_bundle
-    python3 -m venv venv
+    cd /opt/traffic-system/backend
     source venv/bin/activate
-    pip install flask numpy
-    python infer_service.py --npz-path /opt/traffic-system/model_bundle/dcrnn_predictions.npz --port 5001
-
-健康检查：
-
-    curl http://127.0.0.1:5001/health
-
-注意：当前 infer_service.py 必须显式指定 --npz-path，否则可能读取到错误的旧路径。
+    uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
 ---
 
-### 13.6 终端 5：启动 Kafka → Redis consumer
-
-当前稳定版系统里，这一步仍然是必须的。
-
-因为 Redis Feature Store 还需要 consumer 持续把 Kafka 数据写入：
+6.5 终端 5：启动 Kafka → Redis consumer
 
     cd /opt/traffic-system/backend
     source venv/bin/activate
     python /opt/traffic-system/scripts/streaming/consume_sensor_to_redis.py
 
-正常启动后会看到：
+正常输出示例：
 
-    consumer started...
+    consumer started... topic=traffic.feature.windowed
 
 ---
 
-### 13.7 终端 6：编译并提交 Flink Job
-
-1）编译 Flink Job
+6.6 终端 6：编译并提交 Flink Job
 
     cd /opt/traffic-system/flink-job/flink-job
     mvn clean package
 
-2）复制 JAR 到 JobManager 容器
+复制 JAR 到 JobManager 容器：
 
     docker cp target/flink-job-1.0.jar traffic-flink-jobmanager:/tmp/flink-job-1.0.jar
 
-3）提交作业
+提交作业：
 
     docker exec -it traffic-flink-jobmanager bash -lc "/opt/flink/bin/flink run -c com.traffic.App /tmp/flink-job-1.0.jar"
 
-4）检查作业状态
+检查作业状态：
 
     docker exec -it traffic-flink-jobmanager bash -lc "/opt/flink/bin/flink list"
 
@@ -508,15 +357,15 @@ https://github.com/wrbb62612-spec/traffic-system-vm
 
 ---
 
-### 13.8 Kafka Topic 初始化
+7. Kafka Topic 初始化
 
-如果 Kafka 容器是新建的，建议启动后检查 topic 是否存在。
+如果 Kafka 容器重建过，建议检查 topic 是否存在。
 
-检查 topic
+检查：
 
     docker exec -it traffic-kafka bash -lc "/opt/kafka/bin/kafka-topics.sh --list --bootstrap-server 127.0.0.1:9092"
 
-如不存在则创建
+如缺失则创建：
 
     docker exec -it traffic-kafka bash -lc "/opt/kafka/bin/kafka-topics.sh --create --topic traffic.sensor.raw --bootstrap-server 127.0.0.1:9092 --partitions 3 --replication-factor 1"
     
@@ -528,19 +377,26 @@ https://github.com/wrbb62612-spec/traffic-system-vm
 
 ---
 
-### 13.9 固定验证流程
+8. 固定验证流程
 
 系统全部启动后，建议按下面顺序验证。
 
-1）检查数据库底座
+8.1 检查数据库底座
 
     curl http://127.0.0.1:8000/datastore/health
 
-2）检查流处理配置
+8.2 检查流式配置
 
     curl http://127.0.0.1:8000/datastore/stream/health
 
-3）发送一条实时传感器数据
+8.3 检查推理服务健康状态
+
+    cd /opt/traffic-system/backend
+    source venv/bin/activate
+    export INFER_SERVICE_PORT=5001
+    /opt/traffic-system/scripts/model/check_infer_service.sh
+
+8.4 写入一条实时传感器数据
 
     curl -X POST "http://127.0.0.1:8000/datastore/ingest/sensor" \
       -H "Content-Type: application/json" \
@@ -552,179 +408,138 @@ https://github.com/wrbb62612-spec/traffic-system-vm
         "source": "simulator"
       }'
 
-4）查看 Flink 输出 topic
+8.5 查看 Flink 输出 topic
 
     docker exec -it traffic-kafka bash -lc "/opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server traffic-kafka:29092 --topic traffic.feature.windowed --from-beginning"
 
-5）检查 Redis Feature Store
+8.6 检查 Redis Feature Store
 
     curl "http://127.0.0.1:8000/datastore/feature/current/1001"
     curl "http://127.0.0.1:8000/datastore/feature/history/1001?steps=12"
 
-6）触发预测
+8.7 测试后端预测器是否为 dcrnn
+
+    curl -X POST "http://127.0.0.1:8000/predict" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "dataset": "METR-LA",
+        "horizons": [1, 3, 6, 12]
+      }'
+
+如果返回中包含：
+
+    "backend": "dcrnn"
+
+说明后端已经切换为 dcrnn 预测器。
+
+8.8 从 Feature Store 触发预测
 
     curl -X POST "http://127.0.0.1:8000/datastore/predict/from-feature-store?node_ids=1001&steps=12"
 
-7）查看预测缓存
+如果返回中包含：
+
+- source = redis-feature-store
+- infer_service_result
+- redis_cache_key
+
+说明 Feature Store 驱动预测链路已正常。
+
+8.9 查看预测缓存
 
     curl "http://127.0.0.1:8000/datastore/predict/cache/latest?node_ids=1001"
 
 ---
 
-### 13.10 窗口聚合链路验证结果
+9. 第三阶段离线链路运行方式
 
-已完成如下端到端验证：
+如果只想验证离线仓库与离线批处理入口，可直接运行：
 
-1. 通过 `/datastore/ingest/sensor` 接口写入模拟传感器数据到 Kafka 原始主题 `traffic.sensor.raw`
-2. Flink 作业从 `traffic.sensor.raw` 消费数据并按 10 秒事件时间窗口聚合
-3. 聚合结果输出到 Kafka 主题 `traffic.feature.windowed`
-4. Python consumer 从 `traffic.feature.windowed` 消费并写入 Redis Feature Store
-5. 后端通过 `/datastore/feature/current/{node_id}` 和 `/datastore/feature/history/{node_id}` 成功读取窗口特征
-6. 已验证同一节点产生多个连续窗口，`sample_count` 与窗口均值随输入数据变化而变化
-7. 预测接口与热力图缓存接口仍可正常返回结果
+    /opt/traffic-system/scripts/offline/run_offline_pipeline.sh
 
-示例验证结果：
+该脚本会自动完成：
 
-- `feature:node:1001:history` 已累计多个窗口记录
-- 窗口样本数示例：1、2、1、2
-- 窗口平均速度示例：49.2、50.7、52.0、52.8
+1. 启动 MinIO 与基础底座
+2. 等待 MinIO / Redis 就绪
+3. 将 Redis 历史窗口导出到 MinIO
+4. 从 MinIO 下载归档到本地
+5. 运行本地轻量批处理统计
+6. 列出 MinIO 中的归档对象
 
-- --
+当前已验证通过的统计示例包括：
 
-## 14. 仓库当前状况说明
-
-### 14.1 主仓库定位
-
-当前主仓库 traffic-system-vm 主要负责系统主体，包含：
-
-- 前端 src/
-- 后端 backend/
-- 模型推理服务 model_bundle/
-- 启动脚本与辅助文件 scripts/
-- 项目说明文档 README.md
-
-主仓库 README 已经记录了：
-
-- 项目简介
-- 当前架构
-- 前后端与推理服务启动方式
-- Redis / MySQL / MongoDB 基础底座
-- Feature Store → 预测 → Redis缓存 → 前端热力图 的主链路
+- file_count = 3
+- record_count = 32
+- node_count = 1
+- node_ids = ['1001']
 
 ---
 
-### 14.2 当前仓库“已稳定”的部分
+10. 推理服务模式说明
 
-以下内容已经可以视为稳定基线：
+当前系统将推理服务区分为两种模式：
 
-主系统链路
+10.1 replay 模式
 
-- React + Vite 前端可运行
-- FastAPI 后端可运行
-- infer_service.py 可运行
-- Redis / MySQL / MongoDB 可运行
-- Feature Store current/history 可读写
-- /datastore/predict/from-feature-store 可成功触发预测
-- Redis 预测缓存可生成
-- 前端热力图可读取缓存展示
+- 当前已实现
+- 使用 dcrnn_predictions.npz
+- 适合演示、答辩、离线样本回放
+- 当前默认模式
 
-这些能力已经在主仓库 README 中有基础说明
+10.2 live 模式
 
----
-
-### 14.3 当前仓库“二阶段新增”的部分
-
-本地 VM 里已经完成，但 README 尚未完全同步的部分包括：
-
-大数据流处理侧
-
-- Kafka 已部署并可用
-- Flink JobManager / TaskManager 已部署并可用
-- Flink Job 已成功 RUNNING
-- traffic.sensor.raw -> traffic.feature.windowed 已打通
-- /datastore/ingest/sensor 已能把数据写入 Kafka
-- Kafka → Redis consumer 已可运行
-- Kafka / Redis / Feature Store / Predict 已形成闭环
-
-也就是说，本地系统实际状态已经比 GitHub main 上的 README 更靠前一阶段。
+- 当前预留
+- 目标是未来接入真实在线前向推理
+- 当前仓库尚未提供稳定可运行实现
 
 ---
 
-### 14.4 当前目录分工
+11. 当前限制
 
-/opt/traffic-system
+当前系统虽然已经具备较完整的工程原型能力，但仍存在以下限制：
 
-主系统目录，负责：
-
-- 前端页面
-- FastAPI 后端
-- 推理服务
-- Flink Job 源码
-- Kafka consumer 脚本
-
-/opt/traffic-dw
-
-大数据平台侧目录，负责：
-
-- Docker Compose 编排
-- Kafka / Flink 运行环境
-- 后续的大数据平台 README、启动脚本、自启脚本
-
-建议后续继续保持这种分层：
-
-- traffic-system：应用系统
-- traffic-dw：平台与部署
+- infer_service.py 当前仍为 replay 模式
+- 当前 backend = npz-offline，尚未切换到真实 live 前向推理
+- 部分前端页面仍保留静态数据
+- systemd 自启动还未全面收口
+- README 与文档仍需继续同步到当前最新状态
+- 多节点联合预测、自动周期刷新、训练样本构建仍可继续增强
 
 ---
 
-### 14.5 当前仍在进行中的部分
-
-以下内容仍可继续完善，但核心链路已经完成：
-
-- 自启动脚本与 systemd 服务还没补完
-- README 还需要继续同步前端实时特征面板等新能力
-- 当前 infer_service 仍是 npz-offline 回放模式
-- 还未切换为真实 TensorFlow checkpoint 在线推理
-- 多节点联合预测与自动周期刷新还可以继续增强
-
----
-
-### 14.6缓存热力图与时间轴联动修复
-
-本次更新修复了“执行预测并加载缓存”后地图热力图锁定在 Redis 缓存结果、底部时间轴播放按钮无法驱动热力图变化的问题。
-
-修复后，系统将地图展示分为两种模式：
-
-1. **Redis 缓存预测模式**  
-   点击“执行预测并加载缓存”后，地图优先显示 Redis 中最新一次预测缓存结果，用于查看当前预测时域下的缓存热力图。
-
-2. **时间轴样本播放模式**  
-   当用户点击底部播放按钮、前进/后退按钮或拖动时间轴时，系统会自动退出 Redis 缓存模式，恢复为按 `sample` 驱动的热力图播放模式，使热力图能够随时间轴连续变化。
-
-同时，本次更新还完善了底部时间轴控件的交互逻辑，确保前进、后退、播放、拖动等操作都能够正确触发地图热力图刷新，避免出现“时间轴在动但热力图不变”的现象。
-
-通过该修复，系统现在已经能够同时支持：
-- **缓存预测结果查看**
-- **离线样本序列播放**
-- **两种模式之间的正确切换**
-
-这进一步提升了交通预测大屏在演示、调试和答辩场景下的可用性与完整性。
-
----
-
-## 15. 当前版本一句话总结
+12. 当前项目现状总结
 
 当前系统已经完成：
 
-前端 + 后端 + 推理服务 + Redis/MySQL/MongoDB + Kafka/Flink + Feature Store + 预测缓存 的联合运行。
+- 前端 + 后端 + 推理服务联合运行
+- Redis / MySQL / MongoDB 大数据底座接入
+- Kafka / Flink 实时流处理链路打通
+- Redis Feature Store 驱动预测
+- Redis 预测缓存与前端热力图联动
+- 后端 dcrnn 预测器联调完成
+- replay 模式推理服务规范化
+- MinIO 离线仓库落地
+- Redis → MinIO → 本地离线批处理链路落地
 
-其中：
+当前最准确的一句话总结是：
 
-- 主系统链路已经稳定可用
-- Kafka → Flink 窗口聚合 → traffic.feature.windowed → Redis Feature Store 已打通
-- /datastore/ingest/sensor → /datastore/feature/current/history → /datastore/predict/from-feature-store 已完成端到端验证
-- 当前系统已从“Flink 透传版”升级为“窗口聚合版”
+项目已经从“可演示原型”升级为“实时链路 + 离线归档 + 模式化推理”的工程化初版。
 
 ---
 
+13. 后续计划
 
+下一阶段建议重点推进：
+
+- 将 infer_service 从 replay 逐步升级到 live
+- 将前端 DataViz 静态数据页切换为真实接口
+- 增加 systemd / 自启动脚本
+- 补齐 README 与阶段文档同步
+- 增加多节点联合预测与自动刷新机制
+
+---
+
+14. GitHub 仓库
+
+当前项目仓库：
+
+    https://github.com/wrbb62612-spec/traffic-system-vm

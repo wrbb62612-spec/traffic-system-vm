@@ -1,0 +1,45 @@
+{
+  "bundle_name": "dcrnn-metr-la-bundle",
+  "bundle_version": "0.2.0",
+  "dataset": "METR-LA",
+  "sensor_count": 207,
+  "horizon_count": 12,
+  "mode_support": [
+    "replay",
+    "live"
+  ],
+  "default_mode": "replay",
+  "current_mode": "replay",
+  "current_backend": "npz-offline",
+  "status": {
+    "replay": "ready",
+    "live": "reserved"
+  },
+  "artifacts": {
+    "infer_service": "infer_service.py",
+    "sensor_meta": "sensor_meta.json",
+    "scaler": "scaler.json",
+    "graph_adj": "adj_mx.pkl",
+    "graph_sensor_locations": "graph_sensor_locations.csv",
+    "config": "config_20.yaml",
+    "checkpoint_dir": "checkpoint",
+    "weights_index": "models-2.9120-7875.index",
+    "weights_data": "models-2.9120-7875.data-00000-of-00001",
+    "offline_predictions": "dcrnn_predictions.npz"
+  },
+  "input_contract": {
+    "history_steps": 12,
+    "primary_feature": "speed",
+    "aux_feature": "time_of_day",
+    "expected_shape": [1, 12, 207, 2]
+  },
+  "output_contract": {
+    "prediction_steps": 12,
+    "unit": "mph"
+  },
+  "notes": [
+    "replay 模式已经可运行，使用 dcrnn_predictions.npz",
+    "live 模式预留为未来真实在线前向推理入口",
+    "当前阶段先确保 replay 模式、离线仓库、离线批处理稳定"
+  ]
+}
