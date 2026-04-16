@@ -12,4 +12,6 @@ redis
 pymysql
 pymongo
 kafka-python
-minioflask
+minio
+flask
+
