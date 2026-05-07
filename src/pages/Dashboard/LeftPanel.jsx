@@ -162,7 +162,7 @@ function CongestionPie() {
 }
 
 // Real-time flow sparkline
-function FlowSparkline({ dataset = 'PEMS03' }) {
+function FlowSparkline({ dataset = 'METR-LA' }) {
   const data = HOURLY_DATA[dataset];
   const option = {
     backgroundColor: 'transparent',
@@ -231,10 +231,10 @@ function FlowSparkline({ dataset = 'PEMS03' }) {
 // Data Source Status List
 function DataSourceStatus() {
   const sources = [
-    { name: 'PEMS03 传感器网络', region: '洛杉矶', count: 358, quality: 98.4, delay: 2.1, status: 'online', color: '#00c3ff' },
-    { name: 'PEMS04 传感器网络', region: '旧金山湾区', count: 307, quality: 99.1, delay: 1.8, status: 'online', color: '#39ff6a' },
-    { name: 'PEMS07 传感器网络', region: '加州第七区', count: 883, quality: 97.6, delay: 2.4, status: 'online', color: '#ff9500' },
-    { name: 'PEMS08 传感器网络', region: '圣贝纳迪诺', count: 170, quality: 98.8, delay: 1.5, status: 'online', color: '#b24bff' },
+    { name: 'METR-LA 传感器网络', region: '洛杉矶县', count: 207, quality: 98.4, delay: 2.1, status: 'online', color: '#00c3ff' },
+    { name: 'PEMS-BAY 传感器网络', region: '旧金山湾区', count: 325, quality: 99.1, delay: 1.8, status: 'online', color: '#39ff6a' },
+    { name: 'PeMS07 传感器网络', region: '加州洛杉矶地区', count: 883, quality: 97.6, delay: 2.4, status: 'online', color: '#ff9500' },
+    { name: 'PeMS08 传感器网络', region: '圣贝纳迪诺', count: 170, quality: 98.8, delay: 1.5, status: 'online', color: '#b24bff' },
   ];
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
@@ -328,7 +328,7 @@ function CongestionEventList() {
 export default function LeftPanel({ timeOffset }) {
   const [tpi, setTpi] = useState(REAL_TIME_KPI.tpi);
   const [kpi, setKpi] = useState(REAL_TIME_KPI);
-  const [selectedDataset, setSelectedDataset] = useState('PEMS03');
+  const [selectedDataset, setSelectedDataset] = useState('METR-LA');
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -399,7 +399,7 @@ export default function LeftPanel({ timeOffset }) {
 
       {/* Dataset selector for flow chart */}
       <div style={{ display: 'flex', gap: 4, flexShrink: 0, flexWrap: 'wrap' }}>
-        {['PEMS03', 'PEMS04', 'PEMS07', 'PEMS08'].map(ds => (
+        {['METR-LA', 'PEMS-BAY', 'PEMS07', 'PEMS08'].map(ds => (
           <button
             key={ds}
             onClick={() => setSelectedDataset(ds)}

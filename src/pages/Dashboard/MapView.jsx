@@ -140,9 +140,9 @@ function SensorTooltip({ sensor, heatInfo, x, y }) {
           { k: "Longitude", v: sensor.lng.toFixed(6) },
           ...(heatInfo
             ? [
-                { k: "预测速度", v: `${heatInfo.pred_speed} mph` },
-                { k: "拥堵热力", v: heatInfo.heat_value.toFixed(3) },
-              ]
+              { k: "预测速度", v: `${heatInfo.pred_speed} mph` },
+              { k: "拥堵热力", v: heatInfo.heat_value.toFixed(3) },
+            ]
             : []),
         ].map((it) => (
           <div key={it.k}>
@@ -241,7 +241,7 @@ function NavControls({ zoom, onZoom, onFitAll, onNorth }) {
 // ── 图层控制 ──────────────────────────────────────────────────
 function LayerControls({ layers, onToggle, heatmapStatus, heatSourceLabel, isLiveModel }) {
   const defs = [
-    { id: "heatmap", label: "拥堵热力图 (DCRNN)", color: "#ff6030" },
+    { id: "heatmap", label: "拥堵热力图 (MST-ATG)", color: "#ff6030" },
     { id: "sensors", label: `传感器节点 (${SENSORS.length})`, color: "#00c3ff" },
     { id: "edges", label: `路网连接 (${EDGES.length})`, color: "#3399dd" },
   ];
@@ -380,7 +380,7 @@ function HeatmapLegend({ show }) {
           margin: "0 4px",
         }}
       />
-      <span style={{ fontSize: 9, color: "rgba(255,255,255,0.3)" }}>DCRNN 预测</span>
+      <span style={{ fontSize: 9, color: "rgba(255,255,255,0.3)" }}>MST-ATG 预测</span>
     </div>
   );
 }
@@ -742,7 +742,7 @@ export default function MapView({
           if (amap) {
             try {
               amap.resize();
-            } catch {}
+            } catch { }
           }
 
           const layer = heatLayerRef.current;
@@ -752,7 +752,7 @@ export default function MapView({
               try {
                 layer.setDataSet(buildHeatDataset(points));
                 layer.show();
-              } catch {}
+              } catch { }
             });
           }
         });
@@ -986,7 +986,7 @@ export default function MapView({
             backdropFilter: "blur(8px)",
           }}
         >
-          {usingCacheHeatmap ? "Redis 缓存预测" : "DCRNN 预测"}{" "}
+          {usingCacheHeatmap ? "Redis 缓存预测" : "MST-ATG 预测"}{" "}
           {HORIZON_LABELS[horizon] ?? `+${horizon * 5}min`}
         </div>
       )}
