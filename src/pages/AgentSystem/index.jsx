@@ -8,72 +8,72 @@ const BACKEND_URL = 'http://localhost:8000';
 // STATUS META
 // ============================================================
 const STATUS_META = {
-  running:    { label: '运行中', color: '#39ff6a', bg: 'rgba(57,255,106,0.10)',  border: 'rgba(57,255,106,0.35)' },
-  processing: { label: '处理中', color: '#ff9500', bg: 'rgba(255,149,0,0.12)',   border: 'rgba(255,149,0,0.35)' },
-  standby:    { label: '待命',   color: '#00c3ff', bg: 'rgba(0,195,255,0.09)',   border: 'rgba(0,195,255,0.30)' },
-  completed:  { label: '完成',   color: '#7ab8d8', bg: 'rgba(122,184,216,0.10)', border: 'rgba(122,184,216,0.28)' },
-  error:      { label: '异常',   color: '#ff3b3b', bg: 'rgba(255,59,59,0.10)',   border: 'rgba(255,59,59,0.38)' },
+  running: { label: '运行中', color: '#39ff6a', bg: 'rgba(57,255,106,0.10)', border: 'rgba(57,255,106,0.35)' },
+  processing: { label: '处理中', color: '#ff9500', bg: 'rgba(255,149,0,0.12)', border: 'rgba(255,149,0,0.35)' },
+  standby: { label: '待命', color: '#00c3ff', bg: 'rgba(0,195,255,0.09)', border: 'rgba(0,195,255,0.30)' },
+  completed: { label: '完成', color: '#7ab8d8', bg: 'rgba(122,184,216,0.10)', border: 'rgba(122,184,216,0.28)' },
+  error: { label: '异常', color: '#ff3b3b', bg: 'rgba(255,59,59,0.10)', border: 'rgba(255,59,59,0.38)' },
 };
 
 // ============================================================
 // STAGE TEMPLATES
 // ============================================================
 const STAGE_TEMPLATES = [
-  { id: 'intake',   name: '感知摄取', nameEn: 'Intake',     hint: '汇聚 DCRNN 预测与外部态势',       owners: ['perception','predictor','orchestrator'], color: '#00c3ff' },
-  { id: 'plan',     name: '策略规划', nameEn: 'Planner',    hint: '构建协同契约与行动约束',           owners: ['orchestrator','predictor'],              color: '#39ff6a' },
-  { id: 'execute',  name: '并行执行', nameEn: 'Executors',  hint: '各专业 Agent 并行产出动作',        owners: ['signal','traffic','transit','travel'],   color: '#ff9500' },
-  { id: 'simulate', name: '仿真推演', nameEn: 'Simulation', hint: '评估 KPI 改善与副作用',            owners: ['evaluator','predictor'],                 color: '#00ffc8' },
-  { id: 'critic',   name: '一致性校验',nameEn: 'Critic',   hint: '冲突检测、风险登记、共识评分',      owners: ['evaluator','orchestrator'],              color: '#ffd700' },
-  { id: 'refine',   name: '回环修订', nameEn: 'Refine',     hint: '针对风险修订后再执行',             owners: ['orchestrator','signal','traffic'],        color: '#ff6b9d' },
+  { id: 'intake', name: '感知摄取', nameEn: 'Intake', hint: '汇聚 MST-ATG 预测与外部态势', owners: ['perception', 'predictor', 'orchestrator'], color: '#00c3ff' },
+  { id: 'plan', name: '策略规划', nameEn: 'Planner', hint: '构建协同契约与行动约束', owners: ['orchestrator', 'predictor'], color: '#39ff6a' },
+  { id: 'execute', name: '并行执行', nameEn: 'Executors', hint: '各专业 Agent 并行产出动作', owners: ['signal', 'traffic', 'transit', 'travel'], color: '#ff9500' },
+  { id: 'simulate', name: '仿真推演', nameEn: 'Simulation', hint: '评估 KPI 改善与副作用', owners: ['evaluator', 'predictor'], color: '#00ffc8' },
+  { id: 'critic', name: '一致性校验', nameEn: 'Critic', hint: '冲突检测、风险登记、共识评分', owners: ['evaluator', 'orchestrator'], color: '#ffd700' },
+  { id: 'refine', name: '回环修订', nameEn: 'Refine', hint: '针对风险修订后再执行', owners: ['orchestrator', 'signal', 'traffic'], color: '#ff6b9d' },
 ];
 
 // ============================================================
 // AGENT TEMPLATES
 // ============================================================
 const AGENT_TEMPLATES = [
-  { id: 'orchestrator', name: '全局编排 Agent', nameEn: 'Orchestrator',   icon: '🧠', color: '#00c3ff', role: '任务拆解、约束下发、策略统筹' },
-  { id: 'perception',   name: '态势感知 Agent', nameEn: 'Perception',     icon: '📡', color: '#7ab8d8', role: '多源数据融合与异常提取' },
-  { id: 'predictor',    name: '预测分析 Agent', nameEn: 'Predictor',      icon: '📈', color: '#39ff6a', role: 'DCRNN 预测解析与趋势预判' },
-  { id: 'signal',       name: '信控优化 Agent', nameEn: 'Signal',         icon: '🚦', color: '#ff9500', role: '动态相位与绿信比优化' },
-  { id: 'traffic',      name: '交通管控 Agent', nameEn: 'Traffic Control', icon: '🚔', color: '#ff6b6b', role: '匝道计量、诱导分流、路段管控' },
-  { id: 'transit',      name: '公交协同 Agent', nameEn: 'Transit',        icon: '🚌', color: '#b24bff', role: '公共交通运力弹性调度' },
-  { id: 'travel',       name: '出行服务 Agent', nameEn: 'Travel Service', icon: '🧭', color: '#ffd700', role: '多终端分流建议触达' },
-  { id: 'evaluator',    name: '评估审查 Agent', nameEn: 'Evaluator',      icon: '🧪', color: '#00ffc8', role: '仿真评估、一致性审查、风险登记' },
+  { id: 'orchestrator', name: '全局编排 Agent', nameEn: 'Orchestrator', icon: '🧠', color: '#00c3ff', role: '任务拆解、约束下发、策略统筹' },
+  { id: 'perception', name: '态势感知 Agent', nameEn: 'Perception', icon: '📡', color: '#7ab8d8', role: '多源数据融合与异常提取' },
+  { id: 'predictor', name: '预测分析 Agent', nameEn: 'Predictor', icon: '📈', color: '#39ff6a', role: 'MST-ATG 预测解析与趋势预判' },
+  { id: 'signal', name: '信控优化 Agent', nameEn: 'Signal', icon: '🚦', color: '#ff9500', role: '动态相位与绿信比优化' },
+  { id: 'traffic', name: '交通管控 Agent', nameEn: 'Traffic Control', icon: '🚔', color: '#ff6b6b', role: '匝道计量、诱导分流、路段管控' },
+  { id: 'transit', name: '公交协同 Agent', nameEn: 'Transit', icon: '🚌', color: '#b24bff', role: '公共交通运力弹性调度' },
+  { id: 'travel', name: '出行服务 Agent', nameEn: 'Travel Service', icon: '🧭', color: '#ffd700', role: '多终端分流建议触达' },
+  { id: 'evaluator', name: '评估审查 Agent', nameEn: 'Evaluator', icon: '🧪', color: '#00ffc8', role: '仿真评估、一致性审查、风险登记' },
 ];
 
 const TOPOLOGY_LINKS = [
-  { source: 'perception',   target: 'orchestrator', weight: 8 },
-  { source: 'predictor',    target: 'orchestrator', weight: 9 },
-  { source: 'orchestrator', target: 'signal',       weight: 10 },
-  { source: 'orchestrator', target: 'traffic',      weight: 9 },
-  { source: 'orchestrator', target: 'transit',      weight: 7 },
-  { source: 'orchestrator', target: 'travel',       weight: 8 },
-  { source: 'signal',       target: 'traffic',      weight: 7 },
-  { source: 'traffic',      target: 'travel',       weight: 7 },
-  { source: 'transit',      target: 'travel',       weight: 6 },
-  { source: 'signal',       target: 'evaluator',    weight: 8 },
-  { source: 'traffic',      target: 'evaluator',    weight: 8 },
-  { source: 'transit',      target: 'evaluator',    weight: 7 },
-  { source: 'travel',       target: 'evaluator',    weight: 7 },
-  { source: 'evaluator',    target: 'orchestrator', weight: 9 },
+  { source: 'perception', target: 'orchestrator', weight: 8 },
+  { source: 'predictor', target: 'orchestrator', weight: 9 },
+  { source: 'orchestrator', target: 'signal', weight: 10 },
+  { source: 'orchestrator', target: 'traffic', weight: 9 },
+  { source: 'orchestrator', target: 'transit', weight: 7 },
+  { source: 'orchestrator', target: 'travel', weight: 8 },
+  { source: 'signal', target: 'traffic', weight: 7 },
+  { source: 'traffic', target: 'travel', weight: 7 },
+  { source: 'transit', target: 'travel', weight: 6 },
+  { source: 'signal', target: 'evaluator', weight: 8 },
+  { source: 'traffic', target: 'evaluator', weight: 8 },
+  { source: 'transit', target: 'evaluator', weight: 7 },
+  { source: 'travel', target: 'evaluator', weight: 7 },
+  { source: 'evaluator', target: 'orchestrator', weight: 9 },
 ];
 
 // ============================================================
 // LANGGRAPH WORKFLOW DAG DEFINITION
 // ============================================================
 const LG_NODES = [
-  { id: 'start',          label: 'START',      type: 'terminal', color: '#00ffc8', stageId: null },
-  { id: 'intake_agent',   label: '感知摄取',   icon: '📡',       color: '#7ab8d8', stageId: 'intake' },
-  { id: 'planner_agent',  label: '策略规划',   icon: '🧠',       color: '#00c3ff', stageId: 'plan' },
-  { id: 'signal_agent',   label: '信控优化',   icon: '🚦',       color: '#ff9500', stageId: 'execute' },
-  { id: 'traffic_agent',  label: '交通管控',   icon: '🚔',       color: '#ff6b6b', stageId: 'execute' },
-  { id: 'transit_agent',  label: '公交协同',   icon: '🚌',       color: '#b24bff', stageId: 'execute' },
-  { id: 'travel_agent',   label: '出行服务',   icon: '🧭',       color: '#ffd700', stageId: 'execute' },
-  { id: 'simulation_agent',label: '仿真推演',  icon: '⚗️',       color: '#00ffc8', stageId: 'simulate' },
-  { id: 'critic_agent',   label: '一致性校验', icon: '🧪',       color: '#ffd700', stageId: 'critic' },
-  { id: 'refine_agent',   label: '修订回环',   icon: '🔄',       color: '#ff6b9d', stageId: 'refine', branch: 'left' },
-  { id: 'report_agent',   label: '报告汇总',   icon: '📋',       color: '#39ff6a', stageId: null, branch: 'right' },
-  { id: 'end',            label: 'END',        type: 'terminal', color: '#00ffc8', stageId: null },
+  { id: 'start', label: 'START', type: 'terminal', color: '#00ffc8', stageId: null },
+  { id: 'intake_agent', label: '感知摄取', icon: '📡', color: '#7ab8d8', stageId: 'intake' },
+  { id: 'planner_agent', label: '策略规划', icon: '🧠', color: '#00c3ff', stageId: 'plan' },
+  { id: 'signal_agent', label: '信控优化', icon: '🚦', color: '#ff9500', stageId: 'execute' },
+  { id: 'traffic_agent', label: '交通管控', icon: '🚔', color: '#ff6b6b', stageId: 'execute' },
+  { id: 'transit_agent', label: '公交协同', icon: '🚌', color: '#b24bff', stageId: 'execute' },
+  { id: 'travel_agent', label: '出行服务', icon: '🧭', color: '#ffd700', stageId: 'execute' },
+  { id: 'simulation_agent', label: '仿真推演', icon: '⚗️', color: '#00ffc8', stageId: 'simulate' },
+  { id: 'critic_agent', label: '一致性校验', icon: '🧪', color: '#ffd700', stageId: 'critic' },
+  { id: 'refine_agent', label: '修订回环', icon: '🔄', color: '#ff6b9d', stageId: 'refine', branch: 'left' },
+  { id: 'report_agent', label: '报告汇总', icon: '📋', color: '#39ff6a', stageId: null, branch: 'right' },
+  { id: 'end', label: 'END', type: 'terminal', color: '#00ffc8', stageId: null },
 ];
 
 // ============================================================
@@ -125,7 +125,7 @@ const INNER_TABS = [
 
 const CHAT_SUGGESTIONS = [
   '当前场景下信控优化的策略是什么？',
-  '解释 DCRNN 模型的预测原理',
+  '解释 MST-ATG 模型的预测原理',
   '匝道计量会带来哪些风险？',
   '如何评估多智能体协同效果？',
   '当前共识评分代表什么含义？',
@@ -153,12 +153,12 @@ function buildIdleStages() {
 function taskTemplate(agentId, stageId, scenario) {
   const title = scenario.title;
   const map = {
-    intake:   { orchestrator: `汇总 ${title} 的实时态势并确认优先级`, perception: '融合传感器流、事件流、天气与活动上下文', predictor: `解析 ${scenario.dataset} 预测结果并提取风险窗口`, signal: '等待编排指令', traffic: '等待编排指令', transit: '等待编排指令', travel: '等待编排指令', evaluator: '准备评估基线指标' },
-    plan:     { orchestrator: '生成协同契约（目标/KPI/约束）', perception: '提供瓶颈链路权重与传播方向', predictor: '输出关键时域风险阈值', signal: '预生成多套信号配时策略', traffic: '预生成匝道计量与诱导策略', transit: '预生成弹性运力调度预案', travel: '预生成多端触达策略', evaluator: '定义评估指标与冲突规则' },
-    execute:  { orchestrator: '分发执行令并监控并行进度', perception: '持续回流现场反馈数据', predictor: '动态修正短时预测偏差', signal: '执行动态相位与绿信比调整', traffic: '执行匝道计量与分流诱导', transit: '执行公交运力弹性加班', travel: '执行分流建议全渠道触达', evaluator: '采集动作执行质量' },
+    intake: { orchestrator: `汇总 ${title} 的实时态势并确认优先级`, perception: '融合传感器流、事件流、天气与活动上下文', predictor: `解析 ${scenario.dataset} 预测结果并提取风险窗口`, signal: '等待编排指令', traffic: '等待编排指令', transit: '等待编排指令', travel: '等待编排指令', evaluator: '准备评估基线指标' },
+    plan: { orchestrator: '生成协同契约（目标/KPI/约束）', perception: '提供瓶颈链路权重与传播方向', predictor: '输出关键时域风险阈值', signal: '预生成多套信号配时策略', traffic: '预生成匝道计量与诱导策略', transit: '预生成弹性运力调度预案', travel: '预生成多端触达策略', evaluator: '定义评估指标与冲突规则' },
+    execute: { orchestrator: '分发执行令并监控并行进度', perception: '持续回流现场反馈数据', predictor: '动态修正短时预测偏差', signal: '执行动态相位与绿信比调整', traffic: '执行匝道计量与分流诱导', transit: '执行公交运力弹性加班', travel: '执行分流建议全渠道触达', evaluator: '采集动作执行质量' },
     simulate: { orchestrator: '核对执行覆盖率与时效性', perception: '输出实时回路稳定性数据', predictor: '估计下一窗口拥堵传播概率', signal: '提交路口效能变化数据', traffic: '提交路段压力变化数据', transit: '提交客流转移数据', travel: '提交触达与采纳数据', evaluator: '运行协同仿真并输出 KPI 投影' },
-    critic:   { orchestrator: '主持冲突审查与责任归因', perception: '复核异常来源可信度', predictor: '复核预测-执行一致性', signal: '回应信控冲突项', traffic: '回应管控冲突项', transit: '回应公共交通承接风险', travel: '回应触达不足风险', evaluator: '输出一致性评分与风险登记' },
-    refine:   { orchestrator: '按审查意见修订协同契约', perception: '校验修订后数据闭环', predictor: '提供修订后的阈值边界', signal: '应用修订后信控参数', traffic: '应用修订后匝道策略', transit: '应用修订后运力策略', travel: '应用修订后触达策略', evaluator: '复检修订后一致性' },
+    critic: { orchestrator: '主持冲突审查与责任归因', perception: '复核异常来源可信度', predictor: '复核预测-执行一致性', signal: '回应信控冲突项', traffic: '回应管控冲突项', transit: '回应公共交通承接风险', travel: '回应触达不足风险', evaluator: '输出一致性评分与风险登记' },
+    refine: { orchestrator: '按审查意见修订协同契约', perception: '校验修订后数据闭环', predictor: '提供修订后的阈值边界', signal: '应用修订后信控参数', traffic: '应用修订后匝道策略', transit: '应用修订后运力策略', travel: '应用修订后触达策略', evaluator: '复检修订后一致性' },
   };
   return map[stageId]?.[agentId] || '等待任务分配';
 }
@@ -177,22 +177,22 @@ function buildInitialEvents() {
   const seed = generateSystemLogs(10);
   return seed.map((l, i) => ({
     id: uid(`seed-${i}`), time: l.time, level: l.level,
-    source: ['orchestrator','predictor','signal','traffic','transit'][i % 5],
-    stage: ['感知摄取','策略规划','并行执行'][i % 3], message: l.msg,
+    source: ['orchestrator', 'predictor', 'signal', 'traffic', 'transit'][i % 5],
+    stage: ['感知摄取', '策略规划', '并行执行'][i % 3], message: l.msg,
   }));
 }
 
 function buildInitialTraceEntries() {
   const now = Date.now();
   return [
-    { id: 't1', node: 'intake_agent',    label: '感知摄取',  color: '#7ab8d8', startMs: now - 9200, durationMs: 1100, status: 'completed' },
-    { id: 't2', node: 'planner_agent',   label: '策略规划',  color: '#00c3ff', startMs: now - 8100, durationMs: 900,  status: 'completed' },
-    { id: 't3', node: 'signal_agent',    label: '信控优化',  color: '#ff9500', startMs: now - 7200, durationMs: 780,  status: 'completed' },
-    { id: 't4', node: 'traffic_agent',   label: '交通管控',  color: '#ff6b6b', startMs: now - 7200, durationMs: 820,  status: 'completed' },
-    { id: 't5', node: 'transit_agent',   label: '公交协同',  color: '#b24bff', startMs: now - 7200, durationMs: 660,  status: 'completed' },
-    { id: 't6', node: 'travel_agent',    label: '出行服务',  color: '#ffd700', startMs: now - 7200, durationMs: 710,  status: 'completed' },
-    { id: 't7', node: 'simulation_agent',label: '仿真推演',  color: '#00ffc8', startMs: now - 6100, durationMs: 1400, status: 'completed' },
-    { id: 't8', node: 'critic_agent',    label: '一致性校验',color: '#ffd700', startMs: now - 4600, durationMs: 960,  status: 'running' },
+    { id: 't1', node: 'intake_agent', label: '感知摄取', color: '#7ab8d8', startMs: now - 9200, durationMs: 1100, status: 'completed' },
+    { id: 't2', node: 'planner_agent', label: '策略规划', color: '#00c3ff', startMs: now - 8100, durationMs: 900, status: 'completed' },
+    { id: 't3', node: 'signal_agent', label: '信控优化', color: '#ff9500', startMs: now - 7200, durationMs: 780, status: 'completed' },
+    { id: 't4', node: 'traffic_agent', label: '交通管控', color: '#ff6b6b', startMs: now - 7200, durationMs: 820, status: 'completed' },
+    { id: 't5', node: 'transit_agent', label: '公交协同', color: '#b24bff', startMs: now - 7200, durationMs: 660, status: 'completed' },
+    { id: 't6', node: 'travel_agent', label: '出行服务', color: '#ffd700', startMs: now - 7200, durationMs: 710, status: 'completed' },
+    { id: 't7', node: 'simulation_agent', label: '仿真推演', color: '#00ffc8', startMs: now - 6100, durationMs: 1400, status: 'completed' },
+    { id: 't8', node: 'critic_agent', label: '一致性校验', color: '#ffd700', startMs: now - 4600, durationMs: 960, status: 'running' },
   ];
 }
 
@@ -1066,8 +1066,8 @@ function LangGraphDAG({ stageIndex, stages, backendResult, cycle, traceCompleted
 
   return (
     <>
-    <div style={{ width: '100%', height: '100%', overflow: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <style>{`
+      <div style={{ width: '100%', height: '100%', overflow: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <style>{`
         @keyframes lg-pulse {
           0%,100%{opacity:0.4;transform:scale(1);}
           50%{opacity:0.8;transform:scale(1.02);}
@@ -1077,164 +1077,164 @@ function LangGraphDAG({ stageIndex, stages, backendResult, cycle, traceCompleted
           100%{stroke-dashoffset:0;}
         }
       `}</style>
-      <div style={{ fontSize: 9, color: 'var(--text-muted)', marginBottom: 6, letterSpacing: '0.1em', textAlign: 'center' }}>
-        {traceCompletedIds?.length ? 'LangGraph · 后端执行轨迹' : `LangGraph Workflow · 第 ${cycle} 轮（演示）`}
+        <div style={{ fontSize: 9, color: 'var(--text-muted)', marginBottom: 6, letterSpacing: '0.1em', textAlign: 'center' }}>
+          {traceCompletedIds?.length ? 'LangGraph · 后端执行轨迹' : `LangGraph Workflow · 第 ${cycle} 轮（演示）`}
+        </div>
+        <svg width={190} height={svgH} viewBox={`0 0 190 ${svgH}`} style={{ overflow: 'visible' }}>
+          {/* Sequential edges */}
+          {seqNodeIds.map((nid, i) => {
+            if (i === seqNodeIds.length - 1) return null;
+            const nextId = seqNodeIds[i + 1];
+            const curY = nodeYMap[nid];
+            const nextY = nodeYMap[nextId];
+            const isT = LG_NODES.find(n => n.id === nid)?.type === 'terminal';
+            const fromY = curY + (isT ? 14 : nodeHeight);
+            const si1 = STAGE_TEMPLATES.findIndex(s => s.id === LG_NODES.find(n => n.id === nid)?.stageId);
+            const isActive = si1 === stageIndex - 1 || si1 === stageIndex;
+            return <FlowLine key={`e-${nid}`} x1={cx} y1={fromY} x2={cx} y2={nextY - 2} isActive={isActive} color={LG_NODES.find(n => n.id === nid)?.color} />;
+          })}
+
+          {/* critic → branch diamond area */}
+          <FlowLine x1={cx} y1={nodeYMap['critic_agent'] + nodeHeight} x2={cx} y2={branchY - 14} isActive={stageIndex >= 4} />
+          {/* Diamond */}
+          <polygon points={`${cx},${branchY - 14} ${cx + 10},${branchY - 4} ${cx},${branchY + 6} ${cx - 10},${branchY - 4}`}
+            fill="rgba(255,213,0,0.15)" stroke="#ffd700" strokeWidth={stageIndex >= 4 ? 1.5 : 0.8} />
+          <text x={cx} y={branchY - 4 + 4} textAnchor="middle" fontSize={7} fill={stageIndex >= 4 ? '#ffd700' : '#4a7a99'}>条件</text>
+
+          {/* branch → refine (left) */}
+          <path d={`M ${cx - 10} ${branchY - 4} Q ${cx - 30} ${branchY + 5} ${40} ${branchY + nodeHeight / 2}`}
+            fill="none" stroke={stageIndex === 5 ? '#ff6b9d' : 'rgba(0,195,255,0.15)'} strokeWidth={stageIndex === 5 ? 1.5 : 1} strokeDasharray="3,2" />
+          {/* branch → report (right) */}
+          <path d={`M ${cx + 10} ${branchY - 4} Q ${cx + 30} ${branchY + 5} ${150} ${branchY + nodeHeight / 2}`}
+            fill="none" stroke={stageIndex >= 0 && stageIndex < 5 ? '#39ff6a' : 'rgba(0,195,255,0.15)'} strokeWidth={1} strokeDasharray="3,2" />
+
+          {/* refine → loop back to signal */}
+          <path d={`M 8 ${branchY + nodeHeight / 2} Q 0 ${branchY} 0 ${nodeYMap['signal_agent'] + nodeHeight / 2} Q 0 ${nodeYMap['signal_agent']} 20 ${nodeYMap['signal_agent'] + nodeHeight / 2}`}
+            fill="none" stroke={stageIndex === 5 ? '#ff6b9d88' : 'rgba(255,107,157,0.2)'} strokeWidth={1.5} strokeDasharray="4,3"
+            markerEnd="url(#arr)" />
+
+          {/* report → END */}
+          <path d={`M ${150} ${branchY + nodeHeight} Q 150 ${endY - 5} ${cx} ${endY - 2}`}
+            fill="none" stroke="rgba(57,255,106,0.3)" strokeWidth={1} strokeDasharray="3,2" />
+
+          {/* Render main nodes (non-branch) */}
+          {LG_NODES.filter(n => !n.branch).map(node => {
+            const y = nodeYMap[node.id];
+            if (node.type === 'terminal') {
+              return (
+                <g key={node.id}>
+                  <ellipse cx={cx} cy={y + 11} rx={42} ry={11}
+                    fill={node.id === 'start' ? 'rgba(0,255,200,0.15)' : 'rgba(0,255,200,0.08)'}
+                    stroke={node.id === 'start'
+                      ? ((traceCompletedIds?.length ? traceHas('intake_agent') : stageIndex > 0) ? '#00ffc8' : 'rgba(0,255,200,0.3)')
+                      : (workflowAllDone || stageIndex >= STAGE_TEMPLATES.length - 1 ? '#00ffc8' : 'rgba(0,255,200,0.3)')}
+                    strokeWidth={1.5} />
+                  <text x={cx} y={y + 15} textAnchor="middle" fontSize={10} fill="#00ffc8" fontWeight={700}>{node.label}</text>
+                </g>
+              );
+            }
+            return <NodeRect key={node.id} node={node} x={cx - nodeWidth / 2} y={y} w={nodeWidth} h={nodeHeight} />;
+          })}
+
+          {/* Branch nodes */}
+          <NodeRect node={LG_NODES.find(n => n.id === 'refine_agent')} x={4} y={branchY} w={80} h={nodeHeight} />
+          <NodeRect node={LG_NODES.find(n => n.id === 'report_agent')} x={106} y={branchY} w={80} h={nodeHeight} />
+        </svg>
+
+        {/* Legend */}
+        <div style={{ display: 'flex', gap: 10, marginTop: 6, fontSize: 9, color: 'var(--text-muted)' }}>
+          {[{ c: '#00ffc8', l: '活跃' }, { c: '#7ab8d8', l: '完成' }, { c: 'rgba(0,195,255,0.2)', l: '待命' }].map(item => (
+            <span key={item.l} style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+              <span style={{ width: 6, height: 6, borderRadius: 2, background: item.c }} />
+              {item.l}
+            </span>
+          ))}
+        </div>
       </div>
-      <svg width={190} height={svgH} viewBox={`0 0 190 ${svgH}`} style={{ overflow: 'visible' }}>
-        {/* Sequential edges */}
-        {seqNodeIds.map((nid, i) => {
-          if (i === seqNodeIds.length - 1) return null;
-          const nextId = seqNodeIds[i + 1];
-          const curY = nodeYMap[nid];
-          const nextY = nodeYMap[nextId];
-          const isT = LG_NODES.find(n => n.id === nid)?.type === 'terminal';
-          const fromY = curY + (isT ? 14 : nodeHeight);
-          const si1 = STAGE_TEMPLATES.findIndex(s => s.id === LG_NODES.find(n => n.id === nid)?.stageId);
-          const isActive = si1 === stageIndex - 1 || si1 === stageIndex;
-          return <FlowLine key={`e-${nid}`} x1={cx} y1={fromY} x2={cx} y2={nextY - 2} isActive={isActive} color={LG_NODES.find(n => n.id === nid)?.color} />;
-        })}
-
-        {/* critic → branch diamond area */}
-        <FlowLine x1={cx} y1={nodeYMap['critic_agent'] + nodeHeight} x2={cx} y2={branchY - 14} isActive={stageIndex >= 4} />
-        {/* Diamond */}
-        <polygon points={`${cx},${branchY - 14} ${cx + 10},${branchY - 4} ${cx},${branchY + 6} ${cx - 10},${branchY - 4}`}
-          fill="rgba(255,213,0,0.15)" stroke="#ffd700" strokeWidth={stageIndex >= 4 ? 1.5 : 0.8} />
-        <text x={cx} y={branchY - 4 + 4} textAnchor="middle" fontSize={7} fill={stageIndex >= 4 ? '#ffd700' : '#4a7a99'}>条件</text>
-
-        {/* branch → refine (left) */}
-        <path d={`M ${cx - 10} ${branchY - 4} Q ${cx - 30} ${branchY + 5} ${40} ${branchY + nodeHeight / 2}`}
-          fill="none" stroke={stageIndex === 5 ? '#ff6b9d' : 'rgba(0,195,255,0.15)'} strokeWidth={stageIndex === 5 ? 1.5 : 1} strokeDasharray="3,2" />
-        {/* branch → report (right) */}
-        <path d={`M ${cx + 10} ${branchY - 4} Q ${cx + 30} ${branchY + 5} ${150} ${branchY + nodeHeight / 2}`}
-          fill="none" stroke={stageIndex >= 0 && stageIndex < 5 ? '#39ff6a' : 'rgba(0,195,255,0.15)'} strokeWidth={1} strokeDasharray="3,2" />
-
-        {/* refine → loop back to signal */}
-        <path d={`M 8 ${branchY + nodeHeight / 2} Q 0 ${branchY} 0 ${nodeYMap['signal_agent'] + nodeHeight / 2} Q 0 ${nodeYMap['signal_agent']} 20 ${nodeYMap['signal_agent'] + nodeHeight / 2}`}
-          fill="none" stroke={stageIndex === 5 ? '#ff6b9d88' : 'rgba(255,107,157,0.2)'} strokeWidth={1.5} strokeDasharray="4,3"
-          markerEnd="url(#arr)" />
-
-        {/* report → END */}
-        <path d={`M ${150} ${branchY + nodeHeight} Q 150 ${endY - 5} ${cx} ${endY - 2}`}
-          fill="none" stroke="rgba(57,255,106,0.3)" strokeWidth={1} strokeDasharray="3,2" />
-
-        {/* Render main nodes (non-branch) */}
-        {LG_NODES.filter(n => !n.branch).map(node => {
-          const y = nodeYMap[node.id];
-          if (node.type === 'terminal') {
-            return (
-              <g key={node.id}>
-                <ellipse cx={cx} cy={y + 11} rx={42} ry={11}
-                  fill={node.id === 'start' ? 'rgba(0,255,200,0.15)' : 'rgba(0,255,200,0.08)'}
-                  stroke={node.id === 'start'
-                    ? ((traceCompletedIds?.length ? traceHas('intake_agent') : stageIndex > 0) ? '#00ffc8' : 'rgba(0,255,200,0.3)')
-                    : (workflowAllDone || stageIndex >= STAGE_TEMPLATES.length - 1 ? '#00ffc8' : 'rgba(0,255,200,0.3)')}
-                  strokeWidth={1.5} />
-                <text x={cx} y={y + 15} textAnchor="middle" fontSize={10} fill="#00ffc8" fontWeight={700}>{node.label}</text>
-              </g>
-            );
-          }
-          return <NodeRect key={node.id} node={node} x={cx - nodeWidth / 2} y={y} w={nodeWidth} h={nodeHeight} />;
-        })}
-
-        {/* Branch nodes */}
-        <NodeRect node={LG_NODES.find(n => n.id === 'refine_agent')} x={4} y={branchY} w={80} h={nodeHeight} />
-        <NodeRect node={LG_NODES.find(n => n.id === 'report_agent')} x={106} y={branchY} w={80} h={nodeHeight} />
-      </svg>
-
-      {/* Legend */}
-      <div style={{ display: 'flex', gap: 10, marginTop: 6, fontSize: 9, color: 'var(--text-muted)' }}>
-        {[{c:'#00ffc8',l:'活跃'},{c:'#7ab8d8',l:'完成'},{c:'rgba(0,195,255,0.2)',l:'待命'}].map(item => (
-          <span key={item.l} style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-            <span style={{ width: 6, height: 6, borderRadius: 2, background: item.c }} />
-            {item.l}
-          </span>
-        ))}
-      </div>
-    </div>
-    {false && (
-      <div style={{ position: 'fixed', inset: 0, zIndex: 1200, background: 'rgba(0, 8, 20, 0.78)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-        <div className="panel panel-glow-green" style={{ width: 'min(1380px, calc(100vw - 48px))', maxHeight: 'calc(100vh - 48px)', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 24px 80px rgba(0,0,0,0.55)' }}>
-          <div className="panel-header" style={{ padding: '12px 14px' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <span className="panel-title">协同产出详情</span>
-              <span style={{ fontSize: 10, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>{workflow?.mission_id || '—'}</span>
-            </div>
-            <div style={{ marginLeft: 'auto', display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              <button type="button" onClick={handleExportMarkdown} style={{ ...exportButtonStyle, color: '#00ffc8', background: 'rgba(0,255,200,0.1)', border: '1px solid rgba(0,255,200,0.28)' }}>导出 .md</button>
-              <button type="button" onClick={handleExportWord} style={{ ...exportButtonStyle, color: '#7ab8d8', background: 'transparent', border: '1px solid rgba(122,184,216,0.35)' }}>导出 Word(.doc)</button>
-              <button type="button" onClick={handleExportPdf} style={{ ...exportButtonStyle, color: '#ffd700', background: 'rgba(255,213,0,0.08)', border: '1px solid rgba(255,213,0,0.28)' }}>导出 PDF</button>
-              <button type="button" onClick={() => setDetailOpen(false)} style={{ ...exportButtonStyle, color: '#ff8c8c', background: 'rgba(255,59,59,0.08)', border: '1px solid rgba(255,59,59,0.28)' }}>关闭</button>
-            </div>
-          </div>
-          <div style={{ flex: 1, minHeight: 0, overflow: 'auto', padding: '12px 14px', display: 'grid', gridTemplateColumns: 'minmax(0,1.2fr) minmax(320px,0.8fr)', gap: 12 }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, minHeight: 0 }}>
-              <div style={{ padding: '10px 12px', borderRadius: 8, border: '1px solid rgba(0,195,255,0.14)', background: 'rgba(0,195,255,0.04)' }}>
-                <div style={{ fontSize: 11, color: '#00c3ff', fontWeight: 700, marginBottom: 8 }}>协同目标</div>
-                {objectives.length > 0 ? (
-                  <ul style={{ margin: 0, paddingLeft: 18, fontSize: 12, color: 'var(--text-primary)', lineHeight: 1.7 }}>
-                    {objectives.map((o, i) => <li key={i}>{o}</li>)}
-                  </ul>
-                ) : (
-                  <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>当前任务未返回协同目标。</div>
-                )}
+      {false && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 1200, background: 'rgba(0, 8, 20, 0.78)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+          <div className="panel panel-glow-green" style={{ width: 'min(1380px, calc(100vw - 48px))', maxHeight: 'calc(100vh - 48px)', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 24px 80px rgba(0,0,0,0.55)' }}>
+            <div className="panel-header" style={{ padding: '12px 14px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <span className="panel-title">协同产出详情</span>
+                <span style={{ fontSize: 10, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>{workflow?.mission_id || '—'}</span>
               </div>
-              <div style={{ flex: 1, minHeight: 320, padding: '10px 12px', borderRadius: 8, border: '1px solid rgba(0,255,200,0.14)', background: 'rgba(0,10,24,0.58)', overflow: 'auto' }}>
-                <div style={{ fontSize: 11, color: '#00ffc8', fontWeight: 700, marginBottom: 8 }}>Markdown 报告</div>
-                {finalReport ? <MarkdownContent>{finalReport}</MarkdownContent> : <pre style={{ margin: 0, whiteSpace: 'pre-wrap', color: 'var(--text-secondary)' }}>{exportMarkdown}</pre>}
+              <div style={{ marginLeft: 'auto', display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                <button type="button" onClick={handleExportMarkdown} style={{ ...exportButtonStyle, color: '#00ffc8', background: 'rgba(0,255,200,0.1)', border: '1px solid rgba(0,255,200,0.28)' }}>导出 .md</button>
+                <button type="button" onClick={handleExportWord} style={{ ...exportButtonStyle, color: '#7ab8d8', background: 'transparent', border: '1px solid rgba(122,184,216,0.35)' }}>导出 Word(.doc)</button>
+                <button type="button" onClick={handleExportPdf} style={{ ...exportButtonStyle, color: '#ffd700', background: 'rgba(255,213,0,0.08)', border: '1px solid rgba(255,213,0,0.28)' }}>导出 PDF</button>
+                <button type="button" onClick={() => setDetailOpen(false)} style={{ ...exportButtonStyle, color: '#ff8c8c', background: 'rgba(255,59,59,0.08)', border: '1px solid rgba(255,59,59,0.28)' }}>关闭</button>
               </div>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, minHeight: 0 }}>
-              <div style={{ padding: '10px 12px', borderRadius: 8, border: '1px solid rgba(0,195,255,0.14)', background: 'rgba(0,195,255,0.04)' }}>
-                <div style={{ fontSize: 11, color: '#00c3ff', fontWeight: 700, marginBottom: 8 }}>协同契约</div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                  {chip('提速目标', contract.target_speed_gain_pct, '%')}
-                  {chip('拥堵下降', contract.target_congestion_drop_pct, '%')}
-                  {chip('延误下降', contract.target_delay_drop_pct, '%')}
-                  {chip('匝道上限', contract.max_ramp_drop_pct, '%')}
-                  {chip('绿信比下限', contract.min_signal_green_ext_pct, '%')}
-                  {chip('公交运力下限', contract.min_transit_boost_pct, '%')}
+            <div style={{ flex: 1, minHeight: 0, overflow: 'auto', padding: '12px 14px', display: 'grid', gridTemplateColumns: 'minmax(0,1.2fr) minmax(320px,0.8fr)', gap: 12 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12, minHeight: 0 }}>
+                <div style={{ padding: '10px 12px', borderRadius: 8, border: '1px solid rgba(0,195,255,0.14)', background: 'rgba(0,195,255,0.04)' }}>
+                  <div style={{ fontSize: 11, color: '#00c3ff', fontWeight: 700, marginBottom: 8 }}>协同目标</div>
+                  {objectives.length > 0 ? (
+                    <ul style={{ margin: 0, paddingLeft: 18, fontSize: 12, color: 'var(--text-primary)', lineHeight: 1.7 }}>
+                      {objectives.map((o, i) => <li key={i}>{o}</li>)}
+                    </ul>
+                  ) : (
+                    <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>当前任务未返回协同目标。</div>
+                  )}
                 </div>
-                {Array.isArray(contract.hard_constraints) && contract.hard_constraints.length > 0 && (
-                  <div style={{ marginTop: 8, fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.65 }}>硬约束：{contract.hard_constraints.join('；')}</div>
-                )}
-              </div>
-              <div style={{ padding: '10px 12px', borderRadius: 8, border: '1px solid rgba(0,195,255,0.14)', background: 'rgba(0,195,255,0.04)' }}>
-                <div style={{ fontSize: 11, color: '#00c3ff', fontWeight: 700, marginBottom: 8 }}>动作清单</div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 6, maxHeight: 260, overflow: 'auto' }}>
-                  {actions.length > 0 ? actions.map(actionCard) : <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>当前任务未返回专业动作。</div>}
+                <div style={{ flex: 1, minHeight: 320, padding: '10px 12px', borderRadius: 8, border: '1px solid rgba(0,255,200,0.14)', background: 'rgba(0,10,24,0.58)', overflow: 'auto' }}>
+                  <div style={{ fontSize: 11, color: '#00ffc8', fontWeight: 700, marginBottom: 8 }}>Markdown 报告</div>
+                  {finalReport ? <MarkdownContent>{finalReport}</MarkdownContent> : <pre style={{ margin: 0, whiteSpace: 'pre-wrap', color: 'var(--text-secondary)' }}>{exportMarkdown}</pre>}
                 </div>
               </div>
-              <div style={{ padding: '10px 12px', borderRadius: 8, border: '1px solid rgba(0,195,255,0.14)', background: 'rgba(0,195,255,0.04)' }}>
-                <div style={{ fontSize: 11, color: '#00c3ff', fontWeight: 700, marginBottom: 8 }}>结果摘要</div>
-                <div style={{ display: 'grid', gap: 8 }}>
-                  <div style={{ fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.65 }}>
-                    <strong style={{ color: '#7ab8d8' }}>执行摘要：</strong>{execSummary || brief || '—'}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12, minHeight: 0 }}>
+                <div style={{ padding: '10px 12px', borderRadius: 8, border: '1px solid rgba(0,195,255,0.14)', background: 'rgba(0,195,255,0.04)' }}>
+                  <div style={{ fontSize: 11, color: '#00c3ff', fontWeight: 700, marginBottom: 8 }}>协同契约</div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                    {chip('提速目标', contract.target_speed_gain_pct, '%')}
+                    {chip('拥堵下降', contract.target_congestion_drop_pct, '%')}
+                    {chip('延误下降', contract.target_delay_drop_pct, '%')}
+                    {chip('匝道上限', contract.max_ramp_drop_pct, '%')}
+                    {chip('绿信比下限', contract.min_signal_green_ext_pct, '%')}
+                    {chip('公交运力下限', contract.min_transit_boost_pct, '%')}
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,minmax(0,1fr))', gap: 8 }}>
-                    <div style={{ padding: '8px 9px', borderRadius: 6, background: 'rgba(0,10,24,0.42)', fontSize: 10.5, color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)' }}>
-                      均速 {before.avg_speed_mph ?? '—'} {'->'} {after.avg_speed_mph ?? '—'} mph
-                    </div>
-                    <div style={{ padding: '8px 9px', borderRadius: 6, background: 'rgba(0,10,24,0.42)', fontSize: 10.5, color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)' }}>
-                      拥堵 {before.congestion_pct ?? '—'} {'->'} {after.congestion_pct ?? '—'} %
-                    </div>
+                  {Array.isArray(contract.hard_constraints) && contract.hard_constraints.length > 0 && (
+                    <div style={{ marginTop: 8, fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.65 }}>硬约束：{contract.hard_constraints.join('；')}</div>
+                  )}
+                </div>
+                <div style={{ padding: '10px 12px', borderRadius: 8, border: '1px solid rgba(0,195,255,0.14)', background: 'rgba(0,195,255,0.04)' }}>
+                  <div style={{ fontSize: 11, color: '#00c3ff', fontWeight: 700, marginBottom: 8 }}>动作清单</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6, maxHeight: 260, overflow: 'auto' }}>
+                    {actions.length > 0 ? actions.map(actionCard) : <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>当前任务未返回专业动作。</div>}
                   </div>
-                  <div style={{ padding: '8px 9px', borderRadius: 6, background: 'rgba(255,213,0,0.05)', border: '1px solid rgba(255,213,0,0.18)' }}>
-                    <div style={{ fontSize: 10.5, color: '#ffd700', fontWeight: 700, marginBottom: 6 }}>Critic / 风险</div>
-                    {critique && <div style={{ fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.65 }}>{critique}</div>}
-                    {risks.length > 0 && (
-                      <ul style={{ margin: '8px 0 0', paddingLeft: 18, fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                        {risks.map((risk, idx) => <li key={`${risk.id || idx}-${idx}`}>{formatRiskItem(risk)}</li>)}
-                      </ul>
-                    )}
-                    {!critique && risks.length === 0 && <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>当前任务未返回风险项。</div>}
+                </div>
+                <div style={{ padding: '10px 12px', borderRadius: 8, border: '1px solid rgba(0,195,255,0.14)', background: 'rgba(0,195,255,0.04)' }}>
+                  <div style={{ fontSize: 11, color: '#00c3ff', fontWeight: 700, marginBottom: 8 }}>结果摘要</div>
+                  <div style={{ display: 'grid', gap: 8 }}>
+                    <div style={{ fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.65 }}>
+                      <strong style={{ color: '#7ab8d8' }}>执行摘要：</strong>{execSummary || brief || '—'}
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,minmax(0,1fr))', gap: 8 }}>
+                      <div style={{ padding: '8px 9px', borderRadius: 6, background: 'rgba(0,10,24,0.42)', fontSize: 10.5, color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)' }}>
+                        均速 {before.avg_speed_mph ?? '—'} {'->'} {after.avg_speed_mph ?? '—'} mph
+                      </div>
+                      <div style={{ padding: '8px 9px', borderRadius: 6, background: 'rgba(0,10,24,0.42)', fontSize: 10.5, color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)' }}>
+                        拥堵 {before.congestion_pct ?? '—'} {'->'} {after.congestion_pct ?? '—'} %
+                      </div>
+                    </div>
+                    <div style={{ padding: '8px 9px', borderRadius: 6, background: 'rgba(255,213,0,0.05)', border: '1px solid rgba(255,213,0,0.18)' }}>
+                      <div style={{ fontSize: 10.5, color: '#ffd700', fontWeight: 700, marginBottom: 6 }}>Critic / 风险</div>
+                      {critique && <div style={{ fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.65 }}>{critique}</div>}
+                      {risks.length > 0 && (
+                        <ul style={{ margin: '8px 0 0', paddingLeft: 18, fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                          {risks.map((risk, idx) => <li key={`${risk.id || idx}-${idx}`}>{formatRiskItem(risk)}</li>)}
+                        </ul>
+                      )}
+                      {!critique && risks.length === 0 && <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>当前任务未返回风险项。</div>}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    )}
+      )}
     </>
   );
 }
@@ -1284,7 +1284,7 @@ function AgentGridPanel({ agents, selectedAgent, onSelect, columns = 2 }) {
       <div className="panel-header">
         <span className="panel-title">多智能体工作台</span>
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 8, fontSize: 10 }}>
-          {['running','processing','standby','error'].map(key => (
+          {['running', 'processing', 'standby', 'error'].map(key => (
             <span key={key} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: STATUS_META[key].color }} />
               <span style={{ color: 'var(--text-muted)' }}>{statusCount[key]} {STATUS_META[key].label}</span>
@@ -1309,7 +1309,7 @@ function AgentGridPanel({ agents, selectedAgent, onSelect, columns = 2 }) {
                 </div>
                 <div style={{ fontSize: 9.5, color: 'var(--text-secondary)', lineHeight: 1.38, marginBottom: 6, minHeight: 24 }}>{agent.currentTask}</div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,minmax(0,1fr))', gap: 4 }}>
-                  {[{label:'CPU',value:`${agent.cpu}%`,warn:agent.cpu>85},{label:'MEM',value:`${agent.memory}%`,warn:agent.memory>85},{label:'Q',value:`${agent.queue}`,warn:agent.queue>80}].map(item => (
+                  {[{ label: 'CPU', value: `${agent.cpu}%`, warn: agent.cpu > 85 }, { label: 'MEM', value: `${agent.memory}%`, warn: agent.memory > 85 }, { label: 'Q', value: `${agent.queue}`, warn: agent.queue > 80 }].map(item => (
                     <div key={item.label} style={{ background: 'rgba(0,195,255,0.05)', borderRadius: 4, padding: '4px 4px' }}>
                       <div style={{ fontSize: 8.5, color: 'var(--text-muted)' }}>{item.label}</div>
                       <div style={{ fontSize: 9.5, color: item.warn ? '#ff9500' : agent.color, fontFamily: 'var(--font-num)', fontWeight: 700 }}>{item.value}</div>
@@ -1355,7 +1355,7 @@ function TopologyGraph({ agents, selectedAgent }) {
 function ConsensusPanel({ consensusScore, kpi }) {
   const gaugeOption = useMemo(() => ({
     backgroundColor: 'transparent',
-    series: [{ type: 'gauge', min: 0, max: 100, radius: '92%', startAngle: 220, endAngle: -40, pointer: { icon: 'rect', width: 3, length: '56%', itemStyle: { color: '#00ffc8' } }, progress: { show: true, roundCap: true, width: 10 }, axisLine: { lineStyle: { width: 10, color: [[0.7,'#ff6b6b'],[0.85,'#ff9500'],[1,'#39ff6a']] } }, axisTick: { show: false }, splitLine: { show: false }, axisLabel: { show: false }, detail: { valueAnimation: true, formatter: '{value}%', color: '#00ffc8', fontSize: 22, fontFamily: 'var(--font-num)', offsetCenter: [0,'42%'] }, title: { show: true, offsetCenter: [0,'68%'], color: '#7ab8d8', fontSize: 11 }, data: [{ value: Number(consensusScore.toFixed(1)), name: '协同共识' }] }],
+    series: [{ type: 'gauge', min: 0, max: 100, radius: '92%', startAngle: 220, endAngle: -40, pointer: { icon: 'rect', width: 3, length: '56%', itemStyle: { color: '#00ffc8' } }, progress: { show: true, roundCap: true, width: 10 }, axisLine: { lineStyle: { width: 10, color: [[0.7, '#ff6b6b'], [0.85, '#ff9500'], [1, '#39ff6a']] } }, axisTick: { show: false }, splitLine: { show: false }, axisLabel: { show: false }, detail: { valueAnimation: true, formatter: '{value}%', color: '#00ffc8', fontSize: 22, fontFamily: 'var(--font-num)', offsetCenter: [0, '42%'] }, title: { show: true, offsetCenter: [0, '68%'], color: '#7ab8d8', fontSize: 11 }, data: [{ value: Number(consensusScore.toFixed(1)), name: '协同共识' }] }],
   }), [consensusScore]);
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -1366,12 +1366,12 @@ function ConsensusPanel({ consensusScore, kpi }) {
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,minmax(0,1fr))', gap: 6, alignContent: 'start' }}>
           {[
-            {label:'平均速度',value:`${kpi.speed.toFixed(1)} mph`,color:'#00c3ff'},
-            {label:'拥堵占比',value:`${kpi.congestion.toFixed(1)}%`,color:'#ff9500'},
-            {label:'平均延误',value:`${kpi.delay.toFixed(1)} min`,color:'#ff6b6b'},
-            {label:'通行效率',value:`${kpi.throughput.toFixed(1)}`,color:'#39ff6a'},
-            {label:'目标提速',value:`${kpi.targetSpeedGain}%`,color:'#00ffc8'},
-            {label:'目标降拥堵',value:`${kpi.targetCongestionDrop}%`,color:'#ffd700'},
+            { label: '平均速度', value: `${kpi.speed.toFixed(1)} mph`, color: '#00c3ff' },
+            { label: '拥堵占比', value: `${kpi.congestion.toFixed(1)}%`, color: '#ff9500' },
+            { label: '平均延误', value: `${kpi.delay.toFixed(1)} min`, color: '#ff6b6b' },
+            { label: '通行效率', value: `${kpi.throughput.toFixed(1)}`, color: '#39ff6a' },
+            { label: '目标提速', value: `${kpi.targetSpeedGain}%`, color: '#00ffc8' },
+            { label: '目标降拥堵', value: `${kpi.targetCongestionDrop}%`, color: '#ffd700' },
           ].map(item => (
             <div key={item.label} style={{ border: `1px solid ${item.color}55`, background: `${item.color}10`, borderRadius: 6, padding: '8px 9px' }}>
               <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>{item.label}</div>
@@ -1399,7 +1399,7 @@ function AgentRadarPanel({ agent }) {
     ].map(v => Number(v.toFixed(1)));
     return {
       backgroundColor: 'transparent',
-      radar: { indicator: [{name:'执行力',max:100},{name:'稳定性',max:100},{name:'协作度',max:100},{name:'实时性',max:100},{name:'资源效率',max:100}], center: ['50%','56%'], radius: '66%', splitNumber: 4, axisName: { color: 'rgba(200,230,250,0.72)', fontSize: 10 }, splitLine: { lineStyle: { color: 'rgba(0,195,255,0.12)' } }, splitArea: { areaStyle: { color: ['rgba(0,195,255,0.02)','rgba(0,195,255,0.05)'] } }, axisLine: { lineStyle: { color: 'rgba(0,195,255,0.25)' } } },
+      radar: { indicator: [{ name: '执行力', max: 100 }, { name: '稳定性', max: 100 }, { name: '协作度', max: 100 }, { name: '实时性', max: 100 }, { name: '资源效率', max: 100 }], center: ['50%', '56%'], radius: '66%', splitNumber: 4, axisName: { color: 'rgba(200,230,250,0.72)', fontSize: 10 }, splitLine: { lineStyle: { color: 'rgba(0,195,255,0.12)' } }, splitArea: { areaStyle: { color: ['rgba(0,195,255,0.02)', 'rgba(0,195,255,0.05)'] } }, axisLine: { lineStyle: { color: 'rgba(0,195,255,0.25)' } } },
       series: [{ type: 'radar', data: [{ value: values, name: agent.name, lineStyle: { color: agent.color, width: 2.4 }, areaStyle: { color: `${agent.color}2A` }, itemStyle: { color: agent.color } }] }],
       tooltip: { trigger: 'item', backgroundColor: 'rgba(12,26,48,0.95)', borderColor: 'rgba(0,195,255,0.45)', textStyle: { color: '#cde8fa', fontSize: 11 } },
     };
@@ -1663,7 +1663,7 @@ function TracePanel({ trace, stages, agents, events, onSelectNode }) {
                     )}
                   </div>
                   <div style={{ width: 56, fontSize: 9, color: STATUS_COLOR[entry.status], textAlign: 'right', paddingLeft: 6, flexShrink: 0 }}>
-                    {entry.status === 'completed' ? `✓ ${(entry.durationMs/1000).toFixed(2)}s` : entry.status === 'running' ? '运行中' : '等待'}
+                    {entry.status === 'completed' ? `✓ ${(entry.durationMs / 1000).toFixed(2)}s` : entry.status === 'running' ? '运行中' : '等待'}
                   </div>
                 </div>
               );
@@ -1734,7 +1734,7 @@ function TracePanel({ trace, stages, agents, events, onSelectNode }) {
         {[
           { label: '已完成节点', value: entries.filter(e => e.status === 'completed').length, total: entries.length, color: '#39ff6a' },
           { label: '运行中节点', value: entries.filter(e => e.status === 'running').length, total: entries.length, color: '#ff9500' },
-          { label: '平均耗时', value: `${(entries.reduce((a,e) => a + e.durationMs, 0) / entries.length / 1000).toFixed(2)}s`, color: '#00c3ff' },
+          { label: '平均耗时', value: `${(entries.reduce((a, e) => a + e.durationMs, 0) / entries.length / 1000).toFixed(2)}s`, color: '#00c3ff' },
           { label: '总执行时间', value: `${(totalDur / 1000).toFixed(2)}s`, color: '#00ffc8' },
         ].map(stat => (
           <div key={stat.label} className="panel" style={{ padding: '8px 12px', display: 'flex', flexDirection: 'column', gap: 4 }}>
@@ -1762,15 +1762,15 @@ function HITLPanel({ hitl, backendResult, onDecide, onApply, applyLoading }) {
   const allDecisions = hitl.decisions;
 
   const RISK_LEVEL_META = {
-    high:   { label: '高风险', color: '#ff3b3b', bg: 'rgba(255,59,59,0.12)',  icon: '🔴' },
+    high: { label: '高风险', color: '#ff3b3b', bg: 'rgba(255,59,59,0.12)', icon: '🔴' },
     medium: { label: '中风险', color: '#ff9500', bg: 'rgba(255,149,0,0.10)', icon: '🟡' },
-    low:    { label: '低风险', color: '#39ff6a', bg: 'rgba(57,255,106,0.08)', icon: '🟢' },
+    low: { label: '低风险', color: '#39ff6a', bg: 'rgba(57,255,106,0.08)', icon: '🟢' },
   };
 
   const ACTION_META = {
     approve: { label: '批准执行', color: '#39ff6a', bg: 'rgba(57,255,106,0.15)', border: 'rgba(57,255,106,0.4)' },
-    reject:  { label: '驳回修订', color: '#ff3b3b', bg: 'rgba(255,59,59,0.12)', border: 'rgba(255,59,59,0.4)' },
-    modify:  { label: '标注待改', color: '#ff9500', bg: 'rgba(255,149,0,0.12)', border: 'rgba(255,149,0,0.4)' },
+    reject: { label: '驳回修订', color: '#ff3b3b', bg: 'rgba(255,59,59,0.12)', border: 'rgba(255,59,59,0.4)' },
+    modify: { label: '标注待改', color: '#ff9500', bg: 'rgba(255,149,0,0.12)', border: 'rgba(255,149,0,0.4)' },
   };
 
   const stats = {
@@ -1847,7 +1847,7 @@ function HITLPanel({ hitl, backendResult, onDecide, onApply, applyLoading }) {
                             <input
                               placeholder="添加审批备注（可选）"
                               value={reasonInputs[risk.id] || ''}
-                              onChange={e => setReasonInputs(prev => ({...prev, [risk.id]: e.target.value}))}
+                              onChange={e => setReasonInputs(prev => ({ ...prev, [risk.id]: e.target.value }))}
                               className="chat-input"
                               style={{ width: '100%', fontSize: 11, padding: '6px 10px' }}
                             />
@@ -2032,7 +2032,7 @@ function ChatPanel({ chatState, scenario, consensusScore, backendResult, dispatc
         const data = await res.json();
         setRagResults(data.results || []);
       }
-    } catch {}
+    } catch { }
     setRagLoading(false);
   }, [ragQuery]);
 
@@ -2042,7 +2042,7 @@ function ChatPanel({ chatState, scenario, consensusScore, backendResult, dispatc
     fetch(`${BACKEND_URL}/rag/items`)
       .then(r => r.json())
       .then(d => setRagItems(d.items || []))
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   return (
@@ -2066,7 +2066,7 @@ function ChatPanel({ chatState, scenario, consensusScore, backendResult, dispatc
               <div style={{ fontSize: 28, marginBottom: 8 }}>🧠</div>
               <div style={{ fontSize: 13, color: '#00c3ff', fontWeight: 600, marginBottom: 4 }}>交通智能决策助手</div>
               <div style={{ fontSize: 11, color: 'var(--text-muted)', lineHeight: 1.8, maxWidth: 300, margin: '0 auto' }}>
-                基于 DCRNN 预测模型和 LangGraph 多智能体系统<br />可询问交通预测、拥堵分析和 Agent 决策
+                基于 MST-ATG 预测模型和 LangGraph 多智能体系统<br />可询问交通预测、拥堵分析和 Agent 决策
               </div>
             </div>
           )}
@@ -2404,184 +2404,184 @@ function CoordinationOutputPanel({
 
   return (
     <>
-    <div className="panel panel-glow-green" style={{ flex: '0 0 auto', maxHeight: '42%', minHeight: 120, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-      <div className="panel-header">
-        <span className="panel-title">协同产出</span>
-        <span style={{ marginLeft: 'auto', fontSize: 9, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>{workflow.mission_id || '—'}</span>
-        <button type="button" onClick={() => setDetailOpen(true)} style={{ marginLeft: 8, fontSize: 10, fontWeight: 600, color: '#00c3ff', background: 'rgba(0,195,255,0.12)', border: '1px solid rgba(0,195,255,0.28)', borderRadius: 5, padding: '4px 10px', cursor: 'pointer' }}>
-          详情查看
-        </button>
-        <button type="button" onClick={handleExportMarkdown} style={{ marginLeft: 6, fontSize: 10, fontWeight: 600, color: '#00ffc8', background: 'rgba(0,255,200,0.1)', border: '1px solid rgba(0,255,200,0.28)', borderRadius: 5, padding: '4px 10px', cursor: 'pointer' }}>
-          导出 .md
-        </button>
-      </div>
-      <div style={{ flex: 1, overflow: 'auto', padding: '8px 10px', display: 'flex', flexDirection: 'column', gap: 8 }}>
-        {objectives.length > 0 && (
-          <div>
-            <div style={{ fontSize: 10, color: '#00c3ff', fontWeight: 600, marginBottom: 4 }}>协同目标</div>
-            <ul style={{ margin: 0, paddingLeft: 18, fontSize: 11, color: 'var(--text-primary)', lineHeight: 1.55 }}>
-              {objectives.map((o, i) => <li key={i}>{o}</li>)}
-            </ul>
-          </div>
-        )}
-        <div>
-          <div style={{ fontSize: 10, color: '#00c3ff', fontWeight: 600, marginBottom: 4 }}>协同契约（Planner）</div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-            {chip('提速目标', contract.target_speed_gain_pct, '%')}
-            {chip('拥堵下降', contract.target_congestion_drop_pct, '%')}
-            {chip('延误下降', contract.target_delay_drop_pct, '%')}
-            {chip('匝道上限', contract.max_ramp_drop_pct, '%')}
-            {chip('绿信比下限', contract.min_signal_green_ext_pct, '%')}
-            {chip('公交运力下限', contract.min_transit_boost_pct, '%')}
-          </div>
-          {Array.isArray(contract.hard_constraints) && contract.hard_constraints.length > 0 && (
-            <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 6, lineHeight: 1.5 }}>硬约束：{contract.hard_constraints.join('；')}</div>
+      <div className="panel panel-glow-green" style={{ flex: '0 0 auto', maxHeight: '42%', minHeight: 120, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        <div className="panel-header">
+          <span className="panel-title">协同产出</span>
+          <span style={{ marginLeft: 'auto', fontSize: 9, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>{workflow.mission_id || '—'}</span>
+          <button type="button" onClick={() => setDetailOpen(true)} style={{ marginLeft: 8, fontSize: 10, fontWeight: 600, color: '#00c3ff', background: 'rgba(0,195,255,0.12)', border: '1px solid rgba(0,195,255,0.28)', borderRadius: 5, padding: '4px 10px', cursor: 'pointer' }}>
+            详情查看
+          </button>
+          <button type="button" onClick={handleExportMarkdown} style={{ marginLeft: 6, fontSize: 10, fontWeight: 600, color: '#00ffc8', background: 'rgba(0,255,200,0.1)', border: '1px solid rgba(0,255,200,0.28)', borderRadius: 5, padding: '4px 10px', cursor: 'pointer' }}>
+            导出 .md
+          </button>
+        </div>
+        <div style={{ flex: 1, overflow: 'auto', padding: '8px 10px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {objectives.length > 0 && (
+            <div>
+              <div style={{ fontSize: 10, color: '#00c3ff', fontWeight: 600, marginBottom: 4 }}>协同目标</div>
+              <ul style={{ margin: 0, paddingLeft: 18, fontSize: 11, color: 'var(--text-primary)', lineHeight: 1.55 }}>
+                {objectives.map((o, i) => <li key={i}>{o}</li>)}
+              </ul>
+            </div>
           )}
-        </div>
-        {actions.length > 0 && (
           <div>
-            <div style={{ fontSize: 10, color: '#00c3ff', fontWeight: 600, marginBottom: 4 }}>各专业动作（{actions.length}）</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-              {actions.slice(0, 6).map((a, i) => (
-                <div key={i} style={{ fontSize: 10.5, padding: '5px 8px', borderRadius: 5, background: 'rgba(0,195,255,0.06)', borderLeft: `3px solid ${a.priority === 'critical' ? '#ff3b3b' : a.priority === 'high' ? '#ff9500' : '#00c3ff'}` }}>
-                  <span style={{ color: '#7ab8d8', fontWeight: 600 }}>{a.agent}</span>
-                  <span style={{ color: 'var(--text-muted)', margin: '0 6px' }}>·</span>
-                  <span style={{ color: 'var(--text-primary)' }}>{a.title || '动作'}{a.detail ? ` — ${a.detail}` : ''}</span>
-                </div>
-              ))}
-              {actions.length > 6 && <div style={{ fontSize: 9, color: 'var(--text-muted)' }}>… 另有 {actions.length - 6} 条，见指挥台动作清单</div>}
+            <div style={{ fontSize: 10, color: '#00c3ff', fontWeight: 600, marginBottom: 4 }}>协同契约（Planner）</div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              {chip('提速目标', contract.target_speed_gain_pct, '%')}
+              {chip('拥堵下降', contract.target_congestion_drop_pct, '%')}
+              {chip('延误下降', contract.target_delay_drop_pct, '%')}
+              {chip('匝道上限', contract.max_ramp_drop_pct, '%')}
+              {chip('绿信比下限', contract.min_signal_green_ext_pct, '%')}
+              {chip('公交运力下限', contract.min_transit_boost_pct, '%')}
             </div>
+            {Array.isArray(contract.hard_constraints) && contract.hard_constraints.length > 0 && (
+              <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 6, lineHeight: 1.5 }}>硬约束：{contract.hard_constraints.join('；')}</div>
+            )}
           </div>
-        )}
-        {(before.avg_speed_mph != null || after.avg_speed_mph != null) && (
-          <div>
-            <div style={{ fontSize: 10, color: '#00c3ff', fontWeight: 600, marginBottom: 4 }}>KPI 投影（仿真）</div>
-            <div style={{ fontSize: 10, color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)', lineHeight: 1.6 }}>
-              均速 {before.avg_speed_mph ?? '—'} → {after.avg_speed_mph ?? '—'} mph &nbsp;|&nbsp;
-              拥堵 {before.congestion_pct ?? '—'} → {after.congestion_pct ?? '—'} %
+          {actions.length > 0 && (
+            <div>
+              <div style={{ fontSize: 10, color: '#00c3ff', fontWeight: 600, marginBottom: 4 }}>各专业动作（{actions.length}）</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                {actions.slice(0, 6).map((a, i) => (
+                  <div key={i} style={{ fontSize: 10.5, padding: '5px 8px', borderRadius: 5, background: 'rgba(0,195,255,0.06)', borderLeft: `3px solid ${a.priority === 'critical' ? '#ff3b3b' : a.priority === 'high' ? '#ff9500' : '#00c3ff'}` }}>
+                    <span style={{ color: '#7ab8d8', fontWeight: 600 }}>{a.agent}</span>
+                    <span style={{ color: 'var(--text-muted)', margin: '0 6px' }}>·</span>
+                    <span style={{ color: 'var(--text-primary)' }}>{a.title || '动作'}{a.detail ? ` — ${a.detail}` : ''}</span>
+                  </div>
+                ))}
+                {actions.length > 6 && <div style={{ fontSize: 9, color: 'var(--text-muted)' }}>… 另有 {actions.length - 6} 条，见指挥台动作清单</div>}
+              </div>
             </div>
-          </div>
-        )}
-        {(critique || risks.length > 0) && (
-          <div style={{ padding: '6px 8px', background: 'rgba(255,213,0,0.06)', border: '1px solid rgba(255,213,0,0.2)', borderRadius: 6 }}>
-            <div style={{ fontSize: 10, color: '#ffd700', fontWeight: 600 }}>Critic · 风险 {risks.length} 条</div>
-            {critique && <div style={{ fontSize: 10, color: 'var(--text-secondary)', marginTop: 4, lineHeight: 1.55 }}>{critique.slice(0, 220)}{critique.length > 220 ? '…' : ''}</div>}
-            {risks.length > 0 && (
-              <button type="button" onClick={onGoHitl} style={{ marginTop: 6, fontSize: 10, padding: '4px 10px', borderRadius: 5, border: '1px solid rgba(255,149,0,0.45)', background: 'rgba(255,149,0,0.12)', color: '#ff9500', cursor: 'pointer', fontWeight: 600 }}>
-                去 HITL 审批 →
+          )}
+          {(before.avg_speed_mph != null || after.avg_speed_mph != null) && (
+            <div>
+              <div style={{ fontSize: 10, color: '#00c3ff', fontWeight: 600, marginBottom: 4 }}>KPI 投影（仿真）</div>
+              <div style={{ fontSize: 10, color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)', lineHeight: 1.6 }}>
+                均速 {before.avg_speed_mph ?? '—'} → {after.avg_speed_mph ?? '—'} mph &nbsp;|&nbsp;
+                拥堵 {before.congestion_pct ?? '—'} → {after.congestion_pct ?? '—'} %
+              </div>
+            </div>
+          )}
+          {(critique || risks.length > 0) && (
+            <div style={{ padding: '6px 8px', background: 'rgba(255,213,0,0.06)', border: '1px solid rgba(255,213,0,0.2)', borderRadius: 6 }}>
+              <div style={{ fontSize: 10, color: '#ffd700', fontWeight: 600 }}>Critic · 风险 {risks.length} 条</div>
+              {critique && <div style={{ fontSize: 10, color: 'var(--text-secondary)', marginTop: 4, lineHeight: 1.55 }}>{critique.slice(0, 220)}{critique.length > 220 ? '…' : ''}</div>}
+              {risks.length > 0 && (
+                <button type="button" onClick={onGoHitl} style={{ marginTop: 6, fontSize: 10, padding: '4px 10px', borderRadius: 5, border: '1px solid rgba(255,149,0,0.45)', background: 'rgba(255,149,0,0.12)', color: '#ff9500', cursor: 'pointer', fontWeight: 600 }}>
+                  去 HITL 审批 →
+                </button>
+              )}
+            </div>
+          )}
+          {(execSummary || brief) && (
+            <div style={{ fontSize: 10.5, color: 'var(--text-secondary)', lineHeight: 1.55, borderTop: '1px solid rgba(0,195,255,0.1)', paddingTop: 6 }}>
+              <strong style={{ color: '#00ffc8' }}>执行摘要：</strong>{execSummary || brief.slice(0, 280)}{(!execSummary && brief.length > 280) ? '…' : ''}
+            </div>
+          )}
+          {finalReport && (
+            <div>
+              <button type="button" onClick={() => setReportOpen(v => !v)} style={{ fontSize: 10, fontWeight: 600, color: '#00ffc8', background: 'rgba(0,255,200,0.1)', border: '1px solid rgba(0,255,200,0.35)', borderRadius: 5, padding: '5px 12px', cursor: 'pointer' }}>
+                {reportOpen ? '收起完整报告' : '展开完整 Markdown 报告'}
               </button>
-            )}
+              {reportOpen && (
+                <div style={{ marginTop: 8, maxHeight: 240, overflow: 'auto', padding: '8px 10px', background: 'rgba(0,10,24,0.5)', borderRadius: 6, border: '1px solid rgba(0,195,255,0.15)' }}>
+                  <MarkdownContent>{finalReport}</MarkdownContent>
+                </div>
+              )}
+            </div>
+          )}
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 4 }}>
+            <button type="button" onClick={() => setDetailOpen(true)} style={{ ...exportButtonStyle, color: '#00c3ff', background: 'rgba(0,195,255,0.12)', border: '1px solid rgba(0,195,255,0.28)' }}>弹窗查看详情</button>
+            <button type="button" onClick={handleExportWord} style={{ ...exportButtonStyle, color: '#7ab8d8', background: 'transparent', border: '1px solid rgba(122,184,216,0.35)' }}>导出 Word(.doc)</button>
+            <button type="button" onClick={handleExportPdf} style={{ ...exportButtonStyle, color: '#ffd700', background: 'rgba(255,213,0,0.08)', border: '1px solid rgba(255,213,0,0.28)' }}>导出 PDF</button>
+            <button type="button" onClick={onGoTrace} style={{ fontSize: 10, color: '#7ab8d8', background: 'transparent', border: '1px solid rgba(122,184,216,0.35)', borderRadius: 5, padding: '4px 10px', cursor: 'pointer' }}>查看执行轨迹 →</button>
           </div>
-        )}
-        {(execSummary || brief) && (
-          <div style={{ fontSize: 10.5, color: 'var(--text-secondary)', lineHeight: 1.55, borderTop: '1px solid rgba(0,195,255,0.1)', paddingTop: 6 }}>
-            <strong style={{ color: '#00ffc8' }}>执行摘要：</strong>{execSummary || brief.slice(0, 280)}{(!execSummary && brief.length > 280) ? '…' : ''}
-          </div>
-        )}
-        {finalReport && (
-          <div>
-            <button type="button" onClick={() => setReportOpen(v => !v)} style={{ fontSize: 10, fontWeight: 600, color: '#00ffc8', background: 'rgba(0,255,200,0.1)', border: '1px solid rgba(0,255,200,0.35)', borderRadius: 5, padding: '5px 12px', cursor: 'pointer' }}>
-              {reportOpen ? '收起完整报告' : '展开完整 Markdown 报告'}
-            </button>
-            {reportOpen && (
-              <div style={{ marginTop: 8, maxHeight: 240, overflow: 'auto', padding: '8px 10px', background: 'rgba(0,10,24,0.5)', borderRadius: 6, border: '1px solid rgba(0,195,255,0.15)' }}>
-                <MarkdownContent>{finalReport}</MarkdownContent>
-              </div>
-            )}
-          </div>
-        )}
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 4 }}>
-          <button type="button" onClick={() => setDetailOpen(true)} style={{ ...exportButtonStyle, color: '#00c3ff', background: 'rgba(0,195,255,0.12)', border: '1px solid rgba(0,195,255,0.28)' }}>弹窗查看详情</button>
-          <button type="button" onClick={handleExportWord} style={{ ...exportButtonStyle, color: '#7ab8d8', background: 'transparent', border: '1px solid rgba(122,184,216,0.35)' }}>导出 Word(.doc)</button>
-          <button type="button" onClick={handleExportPdf} style={{ ...exportButtonStyle, color: '#ffd700', background: 'rgba(255,213,0,0.08)', border: '1px solid rgba(255,213,0,0.28)' }}>导出 PDF</button>
-          <button type="button" onClick={onGoTrace} style={{ fontSize: 10, color: '#7ab8d8', background: 'transparent', border: '1px solid rgba(122,184,216,0.35)', borderRadius: 5, padding: '4px 10px', cursor: 'pointer' }}>查看执行轨迹 →</button>
         </div>
       </div>
-    </div>
-    {detailOpen && (
-      <div style={{ position: 'fixed', inset: 0, zIndex: 1200, background: 'rgba(0, 8, 20, 0.78)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-        <div className="panel panel-glow-green" style={{ width: 'min(1380px, calc(100vw - 48px))', maxHeight: 'calc(100vh - 48px)', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 24px 80px rgba(0,0,0,0.55)' }}>
-          <div className="panel-header" style={{ padding: '12px 14px' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <span className="panel-title">协同产出详情</span>
-              <span style={{ fontSize: 10, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>{workflow?.mission_id || '—'}</span>
-            </div>
-            <div style={{ marginLeft: 'auto', display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              <button type="button" onClick={handleExportMarkdown} style={{ ...exportButtonStyle, color: '#00ffc8', background: 'rgba(0,255,200,0.1)', border: '1px solid rgba(0,255,200,0.28)' }}>导出 .md</button>
-              <button type="button" onClick={handleExportWord} style={{ ...exportButtonStyle, color: '#7ab8d8', background: 'transparent', border: '1px solid rgba(122,184,216,0.35)' }}>导出 Word(.doc)</button>
-              <button type="button" onClick={handleExportPdf} style={{ ...exportButtonStyle, color: '#ffd700', background: 'rgba(255,213,0,0.08)', border: '1px solid rgba(255,213,0,0.28)' }}>导出 PDF</button>
-              <button type="button" onClick={() => setDetailOpen(false)} style={{ ...exportButtonStyle, color: '#ff8c8c', background: 'rgba(255,59,59,0.08)', border: '1px solid rgba(255,59,59,0.28)' }}>关闭</button>
-            </div>
-          </div>
-          <div style={{ flex: 1, minHeight: 0, overflow: 'auto', padding: '12px 14px', display: 'grid', gridTemplateColumns: 'minmax(0,1.2fr) minmax(320px,0.8fr)', gap: 12 }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, minHeight: 0 }}>
-              <div style={{ padding: '10px 12px', borderRadius: 8, border: '1px solid rgba(0,195,255,0.14)', background: 'rgba(0,195,255,0.04)' }}>
-                <div style={{ fontSize: 11, color: '#00c3ff', fontWeight: 700, marginBottom: 8 }}>协同目标</div>
-                {objectives.length > 0 ? (
-                  <ul style={{ margin: 0, paddingLeft: 18, fontSize: 12, color: 'var(--text-primary)', lineHeight: 1.7 }}>
-                    {objectives.map((o, i) => <li key={i}>{o}</li>)}
-                  </ul>
-                ) : (
-                  <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>当前任务未返回协同目标。</div>
-                )}
+      {detailOpen && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 1200, background: 'rgba(0, 8, 20, 0.78)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+          <div className="panel panel-glow-green" style={{ width: 'min(1380px, calc(100vw - 48px))', maxHeight: 'calc(100vh - 48px)', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 24px 80px rgba(0,0,0,0.55)' }}>
+            <div className="panel-header" style={{ padding: '12px 14px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <span className="panel-title">协同产出详情</span>
+                <span style={{ fontSize: 10, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>{workflow?.mission_id || '—'}</span>
               </div>
-              <div style={{ flex: 1, minHeight: 320, padding: '10px 12px', borderRadius: 8, border: '1px solid rgba(0,255,200,0.14)', background: 'rgba(0,10,24,0.58)', overflow: 'auto' }}>
-                <div style={{ fontSize: 11, color: '#00ffc8', fontWeight: 700, marginBottom: 8 }}>Markdown 报告</div>
-                {finalReport ? <MarkdownContent>{finalReport}</MarkdownContent> : <pre style={{ margin: 0, whiteSpace: 'pre-wrap', color: 'var(--text-secondary)' }}>{exportMarkdown}</pre>}
+              <div style={{ marginLeft: 'auto', display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                <button type="button" onClick={handleExportMarkdown} style={{ ...exportButtonStyle, color: '#00ffc8', background: 'rgba(0,255,200,0.1)', border: '1px solid rgba(0,255,200,0.28)' }}>导出 .md</button>
+                <button type="button" onClick={handleExportWord} style={{ ...exportButtonStyle, color: '#7ab8d8', background: 'transparent', border: '1px solid rgba(122,184,216,0.35)' }}>导出 Word(.doc)</button>
+                <button type="button" onClick={handleExportPdf} style={{ ...exportButtonStyle, color: '#ffd700', background: 'rgba(255,213,0,0.08)', border: '1px solid rgba(255,213,0,0.28)' }}>导出 PDF</button>
+                <button type="button" onClick={() => setDetailOpen(false)} style={{ ...exportButtonStyle, color: '#ff8c8c', background: 'rgba(255,59,59,0.08)', border: '1px solid rgba(255,59,59,0.28)' }}>关闭</button>
               </div>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, minHeight: 0 }}>
-              <div style={{ padding: '10px 12px', borderRadius: 8, border: '1px solid rgba(0,195,255,0.14)', background: 'rgba(0,195,255,0.04)' }}>
-                <div style={{ fontSize: 11, color: '#00c3ff', fontWeight: 700, marginBottom: 8 }}>协同契约</div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                  {chip('提速目标', contract.target_speed_gain_pct, '%')}
-                  {chip('拥堵下降', contract.target_congestion_drop_pct, '%')}
-                  {chip('延误下降', contract.target_delay_drop_pct, '%')}
-                  {chip('匝道上限', contract.max_ramp_drop_pct, '%')}
-                  {chip('绿信比下限', contract.min_signal_green_ext_pct, '%')}
-                  {chip('公交运力下限', contract.min_transit_boost_pct, '%')}
+            <div style={{ flex: 1, minHeight: 0, overflow: 'auto', padding: '12px 14px', display: 'grid', gridTemplateColumns: 'minmax(0,1.2fr) minmax(320px,0.8fr)', gap: 12 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12, minHeight: 0 }}>
+                <div style={{ padding: '10px 12px', borderRadius: 8, border: '1px solid rgba(0,195,255,0.14)', background: 'rgba(0,195,255,0.04)' }}>
+                  <div style={{ fontSize: 11, color: '#00c3ff', fontWeight: 700, marginBottom: 8 }}>协同目标</div>
+                  {objectives.length > 0 ? (
+                    <ul style={{ margin: 0, paddingLeft: 18, fontSize: 12, color: 'var(--text-primary)', lineHeight: 1.7 }}>
+                      {objectives.map((o, i) => <li key={i}>{o}</li>)}
+                    </ul>
+                  ) : (
+                    <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>当前任务未返回协同目标。</div>
+                  )}
                 </div>
-                {Array.isArray(contract.hard_constraints) && contract.hard_constraints.length > 0 && (
-                  <div style={{ marginTop: 8, fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.65 }}>硬约束：{contract.hard_constraints.join('；')}</div>
-                )}
-              </div>
-              <div style={{ padding: '10px 12px', borderRadius: 8, border: '1px solid rgba(0,195,255,0.14)', background: 'rgba(0,195,255,0.04)' }}>
-                <div style={{ fontSize: 11, color: '#00c3ff', fontWeight: 700, marginBottom: 8 }}>动作清单</div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 6, maxHeight: 260, overflow: 'auto' }}>
-                  {actions.length > 0 ? actions.map(actionCard) : <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>当前任务未返回专业动作。</div>}
+                <div style={{ flex: 1, minHeight: 320, padding: '10px 12px', borderRadius: 8, border: '1px solid rgba(0,255,200,0.14)', background: 'rgba(0,10,24,0.58)', overflow: 'auto' }}>
+                  <div style={{ fontSize: 11, color: '#00ffc8', fontWeight: 700, marginBottom: 8 }}>Markdown 报告</div>
+                  {finalReport ? <MarkdownContent>{finalReport}</MarkdownContent> : <pre style={{ margin: 0, whiteSpace: 'pre-wrap', color: 'var(--text-secondary)' }}>{exportMarkdown}</pre>}
                 </div>
               </div>
-              <div style={{ padding: '10px 12px', borderRadius: 8, border: '1px solid rgba(0,195,255,0.14)', background: 'rgba(0,195,255,0.04)' }}>
-                <div style={{ fontSize: 11, color: '#00c3ff', fontWeight: 700, marginBottom: 8 }}>结果摘要</div>
-                <div style={{ display: 'grid', gap: 8 }}>
-                  <div style={{ fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.65 }}>
-                    <strong style={{ color: '#7ab8d8' }}>执行摘要：</strong>{execSummary || brief || '—'}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12, minHeight: 0 }}>
+                <div style={{ padding: '10px 12px', borderRadius: 8, border: '1px solid rgba(0,195,255,0.14)', background: 'rgba(0,195,255,0.04)' }}>
+                  <div style={{ fontSize: 11, color: '#00c3ff', fontWeight: 700, marginBottom: 8 }}>协同契约</div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                    {chip('提速目标', contract.target_speed_gain_pct, '%')}
+                    {chip('拥堵下降', contract.target_congestion_drop_pct, '%')}
+                    {chip('延误下降', contract.target_delay_drop_pct, '%')}
+                    {chip('匝道上限', contract.max_ramp_drop_pct, '%')}
+                    {chip('绿信比下限', contract.min_signal_green_ext_pct, '%')}
+                    {chip('公交运力下限', contract.min_transit_boost_pct, '%')}
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,minmax(0,1fr))', gap: 8 }}>
-                    <div style={{ padding: '8px 9px', borderRadius: 6, background: 'rgba(0,10,24,0.42)', fontSize: 10.5, color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)' }}>
-                      均速 {before.avg_speed_mph ?? '—'} {'->'} {after.avg_speed_mph ?? '—'} mph
-                    </div>
-                    <div style={{ padding: '8px 9px', borderRadius: 6, background: 'rgba(0,10,24,0.42)', fontSize: 10.5, color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)' }}>
-                      拥堵 {before.congestion_pct ?? '—'} {'->'} {after.congestion_pct ?? '—'} %
-                    </div>
+                  {Array.isArray(contract.hard_constraints) && contract.hard_constraints.length > 0 && (
+                    <div style={{ marginTop: 8, fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.65 }}>硬约束：{contract.hard_constraints.join('；')}</div>
+                  )}
+                </div>
+                <div style={{ padding: '10px 12px', borderRadius: 8, border: '1px solid rgba(0,195,255,0.14)', background: 'rgba(0,195,255,0.04)' }}>
+                  <div style={{ fontSize: 11, color: '#00c3ff', fontWeight: 700, marginBottom: 8 }}>动作清单</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6, maxHeight: 260, overflow: 'auto' }}>
+                    {actions.length > 0 ? actions.map(actionCard) : <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>当前任务未返回专业动作。</div>}
                   </div>
-                  <div style={{ padding: '8px 9px', borderRadius: 6, background: 'rgba(255,213,0,0.05)', border: '1px solid rgba(255,213,0,0.18)' }}>
-                    <div style={{ fontSize: 10.5, color: '#ffd700', fontWeight: 700, marginBottom: 6 }}>Critic / 风险</div>
-                    {critique && <div style={{ fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.65 }}>{critique}</div>}
-                    {risks.length > 0 && (
-                      <ul style={{ margin: '8px 0 0', paddingLeft: 18, fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                        {risks.map((risk, idx) => <li key={`${risk.id || idx}-${idx}`}>{formatRiskItem(risk)}</li>)}
-                      </ul>
-                    )}
-                    {!critique && risks.length === 0 && <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>当前任务未返回风险项。</div>}
+                </div>
+                <div style={{ padding: '10px 12px', borderRadius: 8, border: '1px solid rgba(0,195,255,0.14)', background: 'rgba(0,195,255,0.04)' }}>
+                  <div style={{ fontSize: 11, color: '#00c3ff', fontWeight: 700, marginBottom: 8 }}>结果摘要</div>
+                  <div style={{ display: 'grid', gap: 8 }}>
+                    <div style={{ fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.65 }}>
+                      <strong style={{ color: '#7ab8d8' }}>执行摘要：</strong>{execSummary || brief || '—'}
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,minmax(0,1fr))', gap: 8 }}>
+                      <div style={{ padding: '8px 9px', borderRadius: 6, background: 'rgba(0,10,24,0.42)', fontSize: 10.5, color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)' }}>
+                        均速 {before.avg_speed_mph ?? '—'} {'->'} {after.avg_speed_mph ?? '—'} mph
+                      </div>
+                      <div style={{ padding: '8px 9px', borderRadius: 6, background: 'rgba(0,10,24,0.42)', fontSize: 10.5, color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)' }}>
+                        拥堵 {before.congestion_pct ?? '—'} {'->'} {after.congestion_pct ?? '—'} %
+                      </div>
+                    </div>
+                    <div style={{ padding: '8px 9px', borderRadius: 6, background: 'rgba(255,213,0,0.05)', border: '1px solid rgba(255,213,0,0.18)' }}>
+                      <div style={{ fontSize: 10.5, color: '#ffd700', fontWeight: 700, marginBottom: 6 }}>Critic / 风险</div>
+                      {critique && <div style={{ fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.65 }}>{critique}</div>}
+                      {risks.length > 0 && (
+                        <ul style={{ margin: '8px 0 0', paddingLeft: 18, fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                          {risks.map((risk, idx) => <li key={`${risk.id || idx}-${idx}`}>{formatRiskItem(risk)}</li>)}
+                        </ul>
+                      )}
+                      {!critique && risks.length === 0 && <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>当前任务未返回风险项。</div>}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    )}
+      )}
     </>
   );
 }
@@ -2704,7 +2704,7 @@ export default function AgentSystem() {
       try {
         const ws = new WebSocket(wsUrl);
         wsRef.current = ws;
-        ws.onopen = () => { if (disposed) return; dispatch({ type: 'WS_STATUS', connected: true, reconnecting: false }); try { ws.send('ping'); } catch {} };
+        ws.onopen = () => { if (disposed) return; dispatch({ type: 'WS_STATUS', connected: true, reconnecting: false }); try { ws.send('ping'); } catch { } };
         ws.onmessage = (e) => {
           if (disposed) return;
           try {
@@ -2718,14 +2718,14 @@ export default function AgentSystem() {
               loadAgentOverview();
             }
             dispatch({ type: 'WS_EVENT', payload: p });
-          } catch {}
+          } catch { }
         };
         ws.onerror = () => { if (!disposed) dispatch({ type: 'WS_STATUS', connected: false, reconnecting: true }); };
         ws.onclose = () => { if (!disposed) { dispatch({ type: 'WS_STATUS', connected: false, reconnecting: true }); scheduleReconnect(); } };
       } catch { dispatch({ type: 'WS_STATUS', connected: false, reconnecting: true }); scheduleReconnect(); }
     };
     connect();
-    return () => { disposed = true; if (reconnectTimerRef.current) { clearTimeout(reconnectTimerRef.current); reconnectTimerRef.current = null; } if (wsRef.current) { try { wsRef.current.close(); } catch {} } };
+    return () => { disposed = true; if (reconnectTimerRef.current) { clearTimeout(reconnectTimerRef.current); reconnectTimerRef.current = null; } if (wsRef.current) { try { wsRef.current.close(); } catch { } } };
   }, []);
 
   const _buildRunBody = useCallback(() => ({
@@ -2739,7 +2739,7 @@ export default function AgentSystem() {
     fetch(`${BACKEND_URL}/agents/overview`)
       .then(r => r.json())
       .then(d => dispatch({ type: 'OVERVIEW_LOADED', payload: d }))
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   // 加载任务历史
@@ -2830,7 +2830,7 @@ export default function AgentSystem() {
             } else if (obj.type === 'error') {
               dispatch({ type: 'BACKEND_ERROR', error: obj.message });
             }
-          } catch {}
+          } catch { }
         }
       }
     } catch (err) {
@@ -2848,7 +2848,7 @@ export default function AgentSystem() {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ risk_id: riskId, action: act, reason: reason || '' }),
         });
-      } catch {}
+      } catch { }
     }
   }, [state.backend.result]);
 

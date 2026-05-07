@@ -59,8 +59,8 @@ function SegmentGroup({ options, value, onChange }) {
 // ============================================================
 function FlowComparisonChart({ metric }) {
   const datasetColors = {
-    PEMS03: '#00c3ff',
-    PEMS04: '#39ff6a',
+    'METR-LA': '#00c3ff',
+    'PEMS-BAY': '#39ff6a',
     PEMS07: '#ff9500',
     PEMS08: '#b24bff',
   };
@@ -100,7 +100,7 @@ function FlowComparisonChart({ metric }) {
       },
     },
     legend: {
-      data: ['PEMS03', 'PEMS04', 'PEMS07', 'PEMS08'],
+      data: ['METR-LA', 'PEMS-BAY', 'PEMS07', 'PEMS08'],
       top: 0,
       right: 0,
       textStyle: { color: 'rgba(200,230,250,0.7)', fontSize: 10 },
@@ -249,15 +249,15 @@ function SensorRadarChart() {
       type: 'radar',
       data: [
         {
-          name: 'PEMS03',
-          value: [358, 98.4, 3, 26.2, 72, 88],
+          name: 'METR-LA',
+          value: [207, 98.4, 4, 26.2, 72, 88],
           lineStyle: { color: '#00c3ff', width: 2 },
           areaStyle: { color: 'rgba(0,195,255,0.1)' },
           itemStyle: { color: '#00c3ff' },
         },
         {
-          name: 'PEMS04',
-          value: [307, 99.1, 2, 17.0, 68, 91],
+          name: 'PEMS-BAY',
+          value: [325, 99.1, 5, 17.0, 68, 91],
           lineStyle: { color: '#39ff6a', width: 2 },
           areaStyle: { color: 'rgba(57,255,106,0.08)' },
           itemStyle: { color: '#39ff6a' },
@@ -321,7 +321,7 @@ function AccuracyChart({ horizon }) {
       axisTick: { show: false },
       axisLabel: {
         color: (value) => ({
-          PEMS03: '#00c3ff', PEMS04: '#39ff6a', PEMS07: '#ff9500', PEMS08: '#b24bff',
+          'METR-LA': '#00c3ff', 'PEMS-BAY': '#39ff6a', PEMS07: '#ff9500', PEMS08: '#b24bff',
         }[value] || '#cde8fa'),
         fontSize: 11,
         fontWeight: 600,
@@ -359,7 +359,8 @@ function AccuracyChart({ horizon }) {
         itemStyle: {
           color: (params) => {
             const cs = ['rgba(0,195,255,0.8)', 'rgba(57,255,106,0.8)', 'rgba(255,149,0,0.8)', 'rgba(178,75,255,0.8)'];
-            return { type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
+            return {
+              type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
               colorStops: [{ offset: 0, color: cs[params.dataIndex] }, { offset: 1, color: cs[params.dataIndex].replace('0.8', '0.3') }]
             };
           },
@@ -490,11 +491,11 @@ function DataStatsChart() {
     grid: { top: 30, bottom: 32, left: 45, right: 20 },
     xAxis: {
       type: 'category',
-      data: ['PEMS03', 'PEMS04', 'PEMS07', 'PEMS08'],
+      data: ['METR-LA', 'PEMS-BAY', 'PEMS07', 'PEMS08'],
       axisLine: { lineStyle: { color: 'rgba(0,195,255,0.2)' } },
       axisTick: { show: false },
       axisLabel: {
-        color: (v) => ({PEMS03:'#00c3ff', PEMS04:'#39ff6a', PEMS07:'#ff9500', PEMS08:'#b24bff'}[v]),
+        color: (v) => ({ 'METR-LA': '#00c3ff', 'PEMS-BAY': '#39ff6a', PEMS07: '#ff9500', PEMS08: '#b24bff' }[v]),
         fontSize: 11,
         fontWeight: 600,
       },
@@ -513,7 +514,8 @@ function DataStatsChart() {
         data: [26.208, 16.992, 28.224, 17.856],
         barWidth: 18,
         itemStyle: {
-          color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
+          color: {
+            type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
             colorStops: [{ offset: 0, color: '#00c3ff' }, { offset: 1, color: '#00c3ff33' }]
           },
           borderRadius: [3, 3, 0, 0],
@@ -529,7 +531,8 @@ function DataStatsChart() {
         barWidth: 18,
         barGap: '20%',
         itemStyle: {
-          color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
+          color: {
+            type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
             colorStops: [{ offset: 0, color: '#39ff6a' }, { offset: 1, color: '#39ff6a33' }]
           },
           borderRadius: [3, 3, 0, 0],
@@ -577,9 +580,11 @@ function DatasetOverviewCards({ selected, onSelect }) {
             overflow: 'hidden',
           }}
         >
-          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2,
+          <div style={{
+            position: 'absolute', top: 0, left: 0, right: 0, height: 2,
             background: selected === key ? `rgb(${ds.color.join(',')})` : 'transparent',
-            opacity: 0.8 }} />
+            opacity: 0.8
+          }} />
           <div style={{
             fontSize: 11, fontWeight: 700,
             color: `rgb(${ds.color.join(',')})`,
@@ -636,11 +641,11 @@ function CongestionTypeBar() {
     },
     yAxis: {
       type: 'category',
-      data: ['PEMS03', 'PEMS04', 'PEMS07', 'PEMS08'],
+      data: ['METR-LA', 'PEMS-BAY', 'PEMS07', 'PEMS08'],
       axisLine: { lineStyle: { color: 'rgba(0,195,255,0.2)' } },
       axisTick: { show: false },
       axisLabel: {
-        color: (v) => ({ PEMS03: '#00c3ff', PEMS04: '#39ff6a', PEMS07: '#ff9500', PEMS08: '#b24bff' }[v]),
+        color: (v) => ({ 'METR-LA': '#00c3ff', 'PEMS-BAY': '#39ff6a', PEMS07: '#ff9500', PEMS08: '#b24bff' }[v]),
         fontSize: 11,
         fontWeight: 600,
       },
@@ -686,8 +691,8 @@ function CongestionTypeBar() {
 // PREDICTION MULTI-HORIZON LINE
 // ============================================================
 function PredictionHorizonLine({ dataset }) {
-  const realData = HOURLY_DATA[dataset]?.flow || HOURLY_DATA.PEMS03.flow;
-  const pred15 = HOURLY_DATA[dataset]?.predicted_flow || HOURLY_DATA.PEMS03.predicted_flow;
+  const realData = HOURLY_DATA[dataset]?.flow || HOURLY_DATA['METR-LA'].flow;
+  const pred15 = HOURLY_DATA[dataset]?.predicted_flow || HOURLY_DATA['METR-LA'].predicted_flow;
   // Simulate 30min and 60min predictions (slightly less accurate)
   const pred30 = pred15.map((v, i) => Math.round(v + (Math.sin(i * 0.8) * 80)));
   const pred60 = pred15.map((v, i) => Math.round(v + (Math.sin(i * 1.2) * 140)));
@@ -731,9 +736,12 @@ function PredictionHorizonLine({ dataset }) {
         smooth: true,
         symbol: 'none',
         lineStyle: { color: '#00c3ff', width: 2.5 },
-        areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
-          colorStops: [{ offset: 0, color: '#00c3ff28' }, { offset: 1, color: '#00c3ff04' }]
-        }},
+        areaStyle: {
+          color: {
+            type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
+            colorStops: [{ offset: 0, color: '#00c3ff28' }, { offset: 1, color: '#00c3ff04' }]
+          }
+        },
       },
       {
         name: '预测15min',
@@ -768,7 +776,7 @@ function PredictionHorizonLine({ dataset }) {
 // MAIN DATA VIZ PAGE
 // ============================================================
 export default function DataViz() {
-  const [selectedDataset, setSelectedDataset] = useState('PEMS03');
+  const [selectedDataset, setSelectedDataset] = useState('METR-LA');
   const [flowMetric, setFlowMetric] = useState('flow');
   const [horizonMetric, setHorizonMetric] = useState('15分钟');
 
@@ -813,7 +821,7 @@ export default function DataViz() {
         </ChartPanel>
 
         <ChartPanel
-          title="PEMS数据集特征雷达"
+          title="数据集特征雷达"
           subtitle="多维度综合对比"
         >
           <SensorRadarChart />
@@ -823,7 +831,7 @@ export default function DataViz() {
       {/* Charts grid - Row 2 */}
       <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10, minHeight: 0 }}>
         <ChartPanel
-          title="STGNN 预测精度评估"
+          title="MST-ATG 预测精度评估"
           subtitle="多数据集对比"
           controls={
             <SegmentGroup

@@ -1,11 +1,10 @@
 /**
  * Traffic Intelligence System - Mock Data Layer
- * Based on PEMS (California Performance Measurement System) datasets
  *
- * PEMS03: Los Angeles area highways, Sep-Nov 2018, 358 sensors, 26208 records
- * PEMS04: San Francisco Bay Area, Jan-Feb 2018, 307 sensors, 16992 records
- * PEMS07: California District 7, May 2017-Aug 2018, 883 sensors, 28224 records
- * PEMS08: San Bernardino, Jul-Aug 2016, 170 sensors, 17856 records
+ * METR-LA: 洛杉矶县高速公路上的交通速度数据集，207 个传感器
+ * PEMS-BAY：旧金山湾区高速公路节点的交通速度数据集，325 个传感器
+ * PeMS07: 加州洛杉矶地区的交通流数据，883 个传感器
+ * PeMS08：加州圣贝纳迪诺地区高速公路的交通流数据，170 个传感器
  */
 
 // ============================================================
@@ -13,27 +12,27 @@
 // ============================================================
 
 export const PEMS_DATASETS = {
-  PEMS03: {
-    id: 'PEMS03',
-    name: 'PEMS03 - 洛杉矶地区',
-    nameEn: 'Los Angeles Area',
+  'METR-LA': {
+    id: 'METR-LA',
+    name: 'METR-LA - 洛杉矶县',
+    nameEn: 'Los Angeles County',
     center: [-118.243, 34.052],
-    sensors: 358,
+    sensors: 207,
     records: 26208,
-    period: '2018-09-01 ~ 2018-11-30',
-    coverage: '洛杉矶高速公路网络',
+    period: '2012-03-01 ~ 2012-06-30',
+    coverage: '洛杉矶县高速公路网络',
     color: [0, 195, 255],
     highways: ['I-5', 'I-10', 'I-405', 'US-101', 'I-110', 'I-210'],
     zoom: 9.5,
   },
-  PEMS04: {
-    id: 'PEMS04',
-    name: 'PEMS04 - 旧金山湾区',
+  'PEMS-BAY': {
+    id: 'PEMS-BAY',
+    name: 'PEMS-BAY - 旧金山湾区',
     nameEn: 'San Francisco Bay Area',
     center: [-122.278, 37.771],
-    sensors: 307,
+    sensors: 325,
     records: 16992,
-    period: '2018-01-01 ~ 2018-02-28',
+    period: '2017-01-01 ~ 2017-05-31',
     coverage: '旧金山湾区高速公路网络',
     color: [57, 255, 106],
     highways: ['I-80', 'US-101', 'I-880', 'I-580', 'I-280', 'I-680'],
@@ -41,8 +40,8 @@ export const PEMS_DATASETS = {
   },
   PEMS07: {
     id: 'PEMS07',
-    name: 'PEMS07 - 加州第七区',
-    nameEn: 'California District 7',
+    name: 'PeMS07 - 加州洛杉矶地区',
+    nameEn: 'Los Angeles Area',
     center: [-118.412, 34.198],
     sensors: 883,
     records: 28224,
@@ -54,7 +53,7 @@ export const PEMS_DATASETS = {
   },
   PEMS08: {
     id: 'PEMS08',
-    name: 'PEMS08 - 圣贝纳迪诺',
+    name: 'PeMS08 - 圣贝纳迪诺',
     nameEn: 'San Bernardino',
     center: [-117.290, 34.106],
     sensors: 170,
@@ -82,9 +81,9 @@ function seededRandom(seed) {
 
 function generateHighwayPaths() {
   return [
-    // PEMS03 - Los Angeles
+    // METR-LA - Los Angeles County
     {
-      id: 'I5-LA', name: 'I-5 洛杉矶段', dataset: 'PEMS03',
+      id: 'I5-LA', name: 'I-5 洛杉矶段', dataset: 'METR-LA',
       speed: 42, flow: 3200, congestion: 'heavy',
       color: [255, 60, 60, 200],
       path: [
@@ -95,7 +94,7 @@ function generateHighwayPaths() {
       ],
     },
     {
-      id: 'I10-LA', name: 'I-10 圣莫尼卡高速', dataset: 'PEMS03',
+      id: 'I10-LA', name: 'I-10 圣莫尼卡高速', dataset: 'METR-LA',
       speed: 28, flow: 4100, congestion: 'severe',
       color: [255, 30, 30, 220],
       path: [
@@ -106,7 +105,7 @@ function generateHighwayPaths() {
       ],
     },
     {
-      id: 'I405-LA', name: 'I-405 圣地亚哥高速', dataset: 'PEMS03',
+      id: 'I405-LA', name: 'I-405 圣地亚哥高速', dataset: 'METR-LA',
       speed: 18, flow: 4800, congestion: 'severe',
       color: [255, 10, 10, 230],
       path: [
@@ -117,7 +116,7 @@ function generateHighwayPaths() {
       ],
     },
     {
-      id: 'US101-LA', name: 'US-101 好莱坞高速', dataset: 'PEMS03',
+      id: 'US101-LA', name: 'US-101 好莱坞高速', dataset: 'METR-LA',
       speed: 35, flow: 3600, congestion: 'moderate',
       color: [255, 149, 0, 190],
       path: [
@@ -128,7 +127,7 @@ function generateHighwayPaths() {
       ],
     },
     {
-      id: 'I110-LA', name: 'I-110 港口高速', dataset: 'PEMS03',
+      id: 'I110-LA', name: 'I-110 港口高速', dataset: 'METR-LA',
       speed: 55, flow: 2800, congestion: 'light',
       color: [0, 195, 255, 180],
       path: [
@@ -138,7 +137,7 @@ function generateHighwayPaths() {
       ],
     },
     {
-      id: 'I210-LA', name: 'I-210 山麓高速', dataset: 'PEMS03',
+      id: 'I210-LA', name: 'I-210 山麓高速', dataset: 'METR-LA',
       speed: 62, flow: 2100, congestion: 'free',
       color: [57, 255, 106, 180],
       path: [
@@ -147,9 +146,9 @@ function generateHighwayPaths() {
         [-118.350, 34.152], [-118.390, 34.148], [-118.430, 34.145],
       ],
     },
-    // PEMS04 - San Francisco Bay Area
+    // PEMS-BAY - San Francisco Bay Area
     {
-      id: 'I80-SF', name: 'I-80 湾区大桥', dataset: 'PEMS04',
+      id: 'I80-SF', name: 'I-80 湾区大桥', dataset: 'PEMS-BAY',
       speed: 38, flow: 3900, congestion: 'heavy',
       color: [255, 90, 90, 200],
       path: [
@@ -159,7 +158,7 @@ function generateHighwayPaths() {
       ],
     },
     {
-      id: 'US101-SF', name: 'US-101 半岛高速', dataset: 'PEMS04',
+      id: 'US101-SF', name: 'US-101 半岛高速', dataset: 'PEMS-BAY',
       speed: 48, flow: 3200, congestion: 'moderate',
       color: [255, 149, 0, 190],
       path: [
@@ -169,7 +168,7 @@ function generateHighwayPaths() {
       ],
     },
     {
-      id: 'I880-SF', name: 'I-880 东湾高速', dataset: 'PEMS04',
+      id: 'I880-SF', name: 'I-880 东湾高速', dataset: 'PEMS-BAY',
       speed: 55, flow: 2600, congestion: 'light',
       color: [0, 195, 255, 175],
       path: [
@@ -179,7 +178,7 @@ function generateHighwayPaths() {
       ],
     },
     {
-      id: 'I580-SF', name: 'I-580 阿拉米达高速', dataset: 'PEMS04',
+      id: 'I580-SF', name: 'I-580 阿拉米达高速', dataset: 'PEMS-BAY',
       speed: 60, flow: 2200, congestion: 'free',
       color: [57, 255, 106, 170],
       path: [
@@ -291,8 +290,8 @@ function generateSensors(dataset, count, centerLng, centerLat, spread) {
 }
 
 export const ALL_SENSORS = [
-  ...generateSensors('PEMS03', 80, -118.243, 34.052, 0.22),
-  ...generateSensors('PEMS04', 70, -122.278, 37.771, 0.20),
+  ...generateSensors('METR-LA', 80, -118.243, 34.052, 0.22),
+  ...generateSensors('PEMS-BAY', 70, -122.278, 37.771, 0.20),
   ...generateSensors('PEMS07', 100, -118.412, 34.198, 0.28),
   ...generateSensors('PEMS08', 50, -117.290, 34.106, 0.18),
 ];
@@ -303,16 +302,16 @@ export const ALL_SENSORS = [
 
 export const CONGESTION_ARCS = [
   // LA area propagation
-  { source: [-118.405, 34.005], target: [-118.350, 34.030], color: [255, 60, 60, 180], width: 3, dataset: 'PEMS03' },
-  { source: [-118.350, 34.030], target: [-118.295, 34.045], color: [255, 100, 0, 160], width: 2.5, dataset: 'PEMS03' },
-  { source: [-118.295, 34.045], target: [-118.240, 34.052], color: [255, 149, 0, 140], width: 2, dataset: 'PEMS03' },
-  { source: [-118.450, 34.005], target: [-118.480, 33.955], color: [255, 30, 30, 190], width: 3, dataset: 'PEMS03' },
-  { source: [-118.480, 33.955], target: [-118.468, 33.905], color: [255, 80, 0, 170], width: 2.5, dataset: 'PEMS03' },
-  { source: [-118.243, 34.048], target: [-118.215, 34.025], color: [255, 60, 60, 155], width: 2, dataset: 'PEMS03' },
+  { source: [-118.405, 34.005], target: [-118.350, 34.030], color: [255, 60, 60, 180], width: 3, dataset: 'METR-LA' },
+  { source: [-118.350, 34.030], target: [-118.295, 34.045], color: [255, 100, 0, 160], width: 2.5, dataset: 'METR-LA' },
+  { source: [-118.295, 34.045], target: [-118.240, 34.052], color: [255, 149, 0, 140], width: 2, dataset: 'METR-LA' },
+  { source: [-118.450, 34.005], target: [-118.480, 33.955], color: [255, 30, 30, 190], width: 3, dataset: 'METR-LA' },
+  { source: [-118.480, 33.955], target: [-118.468, 33.905], color: [255, 80, 0, 170], width: 2.5, dataset: 'METR-LA' },
+  { source: [-118.243, 34.048], target: [-118.215, 34.025], color: [255, 60, 60, 155], width: 2, dataset: 'METR-LA' },
   // SF Bay Area propagation
-  { source: [-122.395, 37.795], target: [-122.350, 37.810], color: [255, 80, 80, 170], width: 2.5, dataset: 'PEMS04' },
-  { source: [-122.350, 37.810], target: [-122.310, 37.825], color: [255, 130, 0, 150], width: 2, dataset: 'PEMS04' },
-  { source: [-122.410, 37.768], target: [-122.380, 37.790], color: [255, 60, 60, 160], width: 2, dataset: 'PEMS04' },
+  { source: [-122.395, 37.795], target: [-122.350, 37.810], color: [255, 80, 80, 170], width: 2.5, dataset: 'PEMS-BAY' },
+  { source: [-122.350, 37.810], target: [-122.310, 37.825], color: [255, 130, 0, 150], width: 2, dataset: 'PEMS-BAY' },
+  { source: [-122.410, 37.768], target: [-122.380, 37.790], color: [255, 60, 60, 160], width: 2, dataset: 'PEMS-BAY' },
   // San Bernardino propagation
   { source: [-117.293, 34.095], target: [-117.340, 34.080], color: [178, 75, 255, 170], width: 2.5, dataset: 'PEMS08' },
   { source: [-117.340, 34.080], target: [-117.380, 34.070], color: [200, 100, 255, 140], width: 2, dataset: 'PEMS08' },
@@ -350,13 +349,13 @@ function generateHourlySpeed(seed, freeflowSpeed, peakFactor, noise) {
 
 export const HOURLY_DATA = {
   hours: Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, '0')}:00`),
-  PEMS03: {
+  'METR-LA': {
     flow: generateHourlyFlow(301, 3200, 1.0, 0.95, 0.06),
     speed: generateHourlySpeed(302, 65, 0.38, 0.04),
     predicted_flow: generateHourlyFlow(303, 3250, 1.02, 0.97, 0.03),
     predicted_speed: generateHourlySpeed(304, 66, 0.39, 0.02),
   },
-  PEMS04: {
+  'PEMS-BAY': {
     flow: generateHourlyFlow(401, 2800, 0.98, 0.92, 0.05),
     speed: generateHourlySpeed(402, 68, 0.42, 0.04),
     predicted_flow: generateHourlyFlow(403, 2820, 0.99, 0.94, 0.03),
@@ -381,17 +380,17 @@ export const HOURLY_DATA = {
 // ============================================================
 
 export const MODEL_ACCURACY = {
-  datasets: ['PEMS03', 'PEMS04', 'PEMS07', 'PEMS08'],
+  datasets: ['METR-LA', 'PEMS-BAY', 'PEMS07', 'PEMS08'],
   metrics: {
-    MAE: [8.23, 7.85, 9.14, 7.62],
-    RMSE: [12.46, 11.93, 13.78, 11.25],
-    MAPE: [7.8, 7.2, 8.5, 6.9],
-    accuracy: [92.2, 92.8, 91.5, 93.1],
+    MAE: [2.18, 0.85, 9.14, 7.62],
+    RMSE: [5.36, 2.37, 13.78, 11.25],
+    MAPE: [5.17, 1.63, 8.5, 6.9],
+    accuracy: [94.8, 98.4, 91.5, 93.1],
   },
   horizons: ['15分钟', '30分钟', '60分钟'],
   accuracy_by_horizon: {
-    PEMS03: [94.5, 92.2, 88.1],
-    PEMS04: [95.1, 92.8, 88.9],
+    'METR-LA': [95.8, 94.8, 89.7],
+    'PEMS-BAY': [98.8, 98.4, 95.3],
     PEMS07: [93.8, 91.5, 87.2],
     PEMS08: [95.4, 93.1, 89.5],
   },
@@ -403,19 +402,19 @@ export const MODEL_ACCURACY = {
 
 export const CONGESTION_EVENTS = [
   {
-    id: 'CE001', type: '常发性拥堵', location: 'I-405 北行 34.0-34.1', dataset: 'PEMS03',
+    id: 'CE001', type: '常发性拥堵', location: 'I-405 北行 34.0-34.1', dataset: 'METR-LA',
     startTime: '07:15', endTime: '09:45', duration: 150, severity: 'severe',
     speedDrop: 48, flowImpact: 23, position: [-118.450, 34.050],
     cause: '工作日早高峰通勤流量积聚',
   },
   {
-    id: 'CE002', type: '常发性拥堵', location: 'I-10 东行 34.02-34.05', dataset: 'PEMS03',
+    id: 'CE002', type: '常发性拥堵', location: 'I-10 东行 34.02-34.05', dataset: 'METR-LA',
     startTime: '16:30', endTime: '19:10', duration: 160, severity: 'heavy',
     speedDrop: 42, flowImpact: 19, position: [-118.350, 34.038],
     cause: '晚高峰回程车流集中',
   },
   {
-    id: 'CE003', type: '偶发性拥堵', location: 'I-80 东行 Bay Bridge', dataset: 'PEMS04',
+    id: 'CE003', type: '偶发性拥堵', location: 'I-80 东行 Bay Bridge', dataset: 'PEMS-BAY',
     startTime: '08:20', endTime: '10:05', duration: 105, severity: 'heavy',
     speedDrop: 38, flowImpact: 21, position: [-122.395, 37.795],
     cause: '交通事故引发二次排队',
@@ -427,13 +426,13 @@ export const CONGESTION_EVENTS = [
     cause: '居民区早高峰出行',
   },
   {
-    id: 'CE005', type: '偶发性拥堵', location: 'US-101 好莱坞段', dataset: 'PEMS03',
+    id: 'CE005', type: '偶发性拥堵', location: 'US-101 好莱坞段', dataset: 'METR-LA',
     startTime: '11:45', endTime: '13:20', duration: 95, severity: 'moderate',
     speedDrop: 25, flowImpact: 12, position: [-118.355, 34.049],
     cause: '道路施工单向封闭',
   },
   {
-    id: 'CE006', type: '常发性拥堵', location: 'US-101 半岛段', dataset: 'PEMS04',
+    id: 'CE006', type: '常发性拥堵', location: 'US-101 半岛段', dataset: 'PEMS-BAY',
     startTime: '17:00', endTime: '19:30', duration: 150, severity: 'heavy',
     speedDrop: 40, flowImpact: 18, position: [-122.415, 37.800],
     cause: '南湾科技园区下班高峰',
@@ -446,22 +445,22 @@ export const CONGESTION_EVENTS = [
 
 export const AGENT_DECISIONS = [
   {
-    id: 'AD001', agentType: '信控优化', location: 'I-405/I-10 交汇口', dataset: 'PEMS03',
+    id: 'AD001', agentType: '信控优化', location: 'I-405/I-10 交汇口', dataset: 'METR-LA',
     action: '延长绿灯时长', duration: 45, expectedSpeedUp: 12, confidence: 0.87,
     status: 'executing', time: '08:32:15', position: [-118.452, 34.025],
   },
   {
-    id: 'AD002', agentType: '交通管控', location: 'I-10 东行匝道', dataset: 'PEMS03',
+    id: 'AD002', agentType: '交通管控', location: 'I-10 东行匝道', dataset: 'METR-LA',
     action: '匝道限流管控', duration: 30, expectedSpeedUp: 18, confidence: 0.91,
     status: 'pending', time: '08:34:02', position: [-118.360, 34.036],
   },
   {
-    id: 'AD003', agentType: '公共交通', location: '洛杉矶主要公交走廊', dataset: 'PEMS03',
+    id: 'AD003', agentType: '公共交通', location: '洛杉矶主要公交走廊', dataset: 'METR-LA',
     action: '增加公交运力15%', duration: 120, expectedSpeedUp: 8, confidence: 0.78,
     status: 'completed', time: '07:55:00', position: [-118.250, 34.048],
   },
   {
-    id: 'AD004', agentType: '信控优化', location: 'Bay Bridge 入口', dataset: 'PEMS04',
+    id: 'AD004', agentType: '信控优化', location: 'Bay Bridge 入口', dataset: 'PEMS-BAY',
     action: '协调相邻路口信号', duration: 60, expectedSpeedUp: 15, confidence: 0.85,
     status: 'executing', time: '08:25:30', position: [-122.395, 37.795],
   },
@@ -507,30 +506,38 @@ export const REAL_TIME_KPI = {
 export function generateSystemLogs(count = 30) {
   const rng = seededRandom(42);
   const templates = [
-    { level: 'info', msgs: [
-      'STGNN 模型推理完成，预测时效 15min，置信度 {conf}%',
-      '数据接入层：PEMS{ds} 传感器数据批次已接收，{n} 条记录',
-      '特征工程模块：时空对齐处理完成，覆盖 {n} 个检测点',
-      '全局协调 Agent：已将任务分配至信控优化 Agent (优先级:高)',
-      '仿真评估 Agent：场景模拟完成，路网效率提升预估 {pct}%',
-      '缓存刷新：Redis 实时数据更新，延迟 {ms}ms',
-    ]},
-    { level: 'success', msgs: [
-      '信控优化 Agent：I-{seg} 路口绿灯方案已下发，执行率 100%',
-      '数据质量检测：异常值过滤完成，清洁率 {conf}%',
-      '预测模型评估：MAE={mae}，RMSE={rmse}，符合指标要求',
-      '公共交通 Agent：运力调度指令已发送至 {n} 条公交线路',
-    ]},
-    { level: 'warn', msgs: [
-      '检测到 I-{seg} 路段流量异常，已触发偶发拥堵预警',
-      '传感器 PEMS{ds}-{id} 数据缺失，已启动插值填充',
-      '预测误差超过阈值：PEMS{ds} 30min预测，MAPE={pct}%',
-      'Agent 通信延迟 {ms}ms，超过 200ms 告警阈值',
-    ]},
-    { level: 'error', msgs: [
-      'PEMS{ds} 传感器 {id} 连接超时，正在重试...',
-      '仿真引擎 SUMO 异常退出，错误码 {code}，正在重启',
-    ]},
+    {
+      level: 'info', msgs: [
+        'MST-ATG 模型推理完成，预测时效 15min，置信度 {conf}%',
+        '数据接入层：{ds} 传感器数据批次已接收，{n} 条记录',
+        '特征工程模块：时空对齐处理完成，覆盖 {n} 个检测点',
+        '全局协调 Agent：已将任务分配至信控优化 Agent (优先级:高)',
+        '仿真评估 Agent：场景模拟完成，路网效率提升预估 {pct}%',
+        '缓存刷新：Redis 实时数据更新，延迟 {ms}ms',
+      ]
+    },
+    {
+      level: 'success', msgs: [
+        '信控优化 Agent：I-{seg} 路口绿灯方案已下发，执行率 100%',
+        '数据质量检测：异常值过滤完成，清洁率 {conf}%',
+        '预测模型评估：MAE={mae}，RMSE={rmse}，符合指标要求',
+        '公共交通 Agent：运力调度指令已发送至 {n} 条公交线路',
+      ]
+    },
+    {
+      level: 'warn', msgs: [
+        '检测到 I-{seg} 路段流量异常，已触发偶发拥堵预警',
+        '传感器 {ds}-{id} 数据缺失，已启动插值填充',
+        '预测误差超过阈值：{ds} 30min预测，MAPE={pct}%',
+        'Agent 通信延迟 {ms}ms，超过 200ms 告警阈值',
+      ]
+    },
+    {
+      level: 'error', msgs: [
+        '{ds} 传感器 {id} 连接超时，正在重试...',
+        '仿真引擎 SUMO 异常退出，错误码 {code}，正在重启',
+      ]
+    },
   ];
 
   const now = Date.now();
@@ -540,7 +547,7 @@ export function generateSystemLogs(count = 30) {
     const msgTemplate = type.msgs[Math.floor(rng() * type.msgs.length)];
     const msg = msgTemplate
       .replace('{conf}', Math.floor(88 + rng() * 12))
-      .replace('{ds}', ['03', '04', '07', '08'][Math.floor(rng() * 4)])
+      .replace('{ds}', ['METR-LA', 'PEMS-BAY', 'PEMS07', 'PEMS08'][Math.floor(rng() * 4)])
       .replace('{n}', Math.floor(100 + rng() * 900))
       .replace('{pct}', Math.floor(5 + rng() * 20))
       .replace('{ms}', Math.floor(50 + rng() * 250))
@@ -567,14 +574,14 @@ export function getAgentResponse(question) {
   const q = question.toLowerCase();
 
   if (q.includes('预测') || q.includes('预报') || q.includes('forecast')) {
-    return `**[STGNN 预测模型 - 实时响应]**
+    return `**[MST-ATG 预测模型 - 实时响应]**
 
-根据当前训练完成的时空图神经网络（STGNN）模型分析：
+根据当前训练完成的多尺度时空自适应图神经网络（MST-ATG）模型分析：
 
 📊 **短期预测（15分钟）**
-- PEMS03 (I-405/I-10 交汇): 拥堵指数 **7.8** ↑0.6，建议提前干预
-- PEMS04 (Bay Bridge 入口): 流量预测 **2,340 辆/15min**，进入高峰饱和态
-- PEMS08 (I-215 圣贝纳迪诺): 检测到异常流量聚集
+- METR-LA (I-405/I-10 交汇): 拥堵指数 **7.8** ↑0.6，建议提前干预
+- PEMS-BAY (Bay Bridge 入口): 流量预测 **2,340 辆/15min**，进入高峰饱和态
+- PeMS08 (I-215 圣贝纳迪诺): 检测到异常流量聚集
 
 📈 **中期预测（30分钟）**
 - 洛杉矶全路网平均速度预测降至 **38.2 km/h**（当前 43.2 km/h）
@@ -591,9 +598,9 @@ export function getAgentResponse(question) {
 系统已完成拥堵时空传导路径溯源：
 
 🔴 **主要拥堵源头节点**（按严重程度排序）
-1. **I-405 × I-10 交汇节点**（PEMS03）- 拥堵指数 8.9，溯源置信度 94.2%
-2. **I-10 东行 K56-K58 路段**（PEMS03）- 拥堵指数 7.6
-3. **Bay Bridge 西入口**（PEMS04）- 偶发事故引发，置信度 88.1%
+1. **I-405 × I-10 交汇节点**（METR-LA）- 拥堵指数 8.9，溯源置信度 94.2%
+2. **I-10 东行 K56-K58 路段**（METR-LA）- 拥堵指数 7.6
+3. **Bay Bridge 西入口**（PEMS-BAY）- 偶发事故引发，置信度 88.1%
 
 📍 **时空传导路径**
 I-405北行 → I-10东行 → US-101 → 城区局部扩散
@@ -605,28 +612,30 @@ I-405北行 → I-10东行 → US-101 → 城区局部扩散
 *传导路径完整度: 96.8%，达到系统 ≥95% 指标*`;
   }
 
-  if (q.includes('数据') || q.includes('pems') || q.includes('传感器') || q.includes('数据集')) {
-    return `**[PEMS 数据集信息]**
+  if (q.includes('数据') || q.includes('pems') || q.includes('metr') || q.includes('传感器') || q.includes('数据集')) {
+    return `**[交通数据集信息]**
 
-本系统使用了以下4个加州高速公路性能测量系统（PEMS）数据集：
+本系统使用了以下4个交通数据集：
 
-📦 **PEMS03 - 洛杉矶地区**
-- 时间范围：2018年9月1日 ~ 11月30日
-- 传感器数量：**358个**（覆盖I-5、I-10、I-405等主要高速公路）
+📦 **METR-LA - 洛杉矶县**
+- 描述：洛杉矶县高速公路上的交通速度数据集
+- 时间范围：2012年3月1日 ~ 2012年6月30日
+- 传感器数量：**207个**（覆盖I-5、I-10、I-405等主要高速公路）
 - 记录数量：26,208条，时间间隔5分钟
 
-📦 **PEMS04 - 旧金山湾区**
-- 时间范围：2018年1月1日 ~ 2月28日
-- 传感器数量：**307个**（湾区高速路网）
+📦 **PEMS-BAY - 旧金山湾区**
+- 描述：旧金山湾区高速公路节点的交通速度数据集
+- 时间范围：2017年1月1日 ~ 2017年5月31日
+- 传感器数量：**325个**（湾区高速路网）
 - 记录数量：16,992条
 
-📦 **PEMS07 - 加州第七区**
+📦 **PeMS07 - 加州洛杉矶地区**
 - 时间范围：2017年5月1日 ~ 2018年8月31日
 - 传感器数量：**883个**（规模最大）
 - 记录数量：28,224条
 
-📦 **PEMS08 - 圣贝纳迪诺**
-- 时间范围：2016年7月1日 ~ 8月31日
+📦 **PeMS08 - 圣贝纳迪诺**
+- 时间范围：2016年7月1日 ~ 2016年8月31日
 - 传感器数量：**170个**
 - 记录数量：17,856条
 
@@ -664,19 +673,19 @@ I-405北行 → I-10东行 → US-101 → 城区局部扩散
   if (q.includes('准确') || q.includes('精度') || q.includes('accuracy') || q.includes('误差')) {
     return `**[模型性能评估报告]**
 
-STGNN 预测模型在各数据集上的评估结果：
+MST-ATG 预测模型在各数据集上的评估结果：
 
 | 数据集 | MAE | RMSE | MAPE | 准确率 |
 |--------|-----|------|------|--------|
-| PEMS03 | 8.23 | 12.46 | 7.8% | **92.2%** |
-| PEMS04 | 7.85 | 11.93 | 7.2% | **92.8%** |
+| METR-LA | 2.18 | 5.36 | 5.17% | **94.8%** |
+| PEMS-BAY | 0.85 | 2.37 | 1.63% | **98.4%** |
 | PEMS07 | 9.14 | 13.78 | 8.5% | **91.5%** |
 | PEMS08 | 7.62 | 11.25 | 6.9% | **93.1%** |
 
 📊 **多时间粒度准确率**
-- 15分钟预测：平均 **94.7%**（最优 PEMS08: 95.4%）
-- 30分钟预测：平均 **92.4%**
-- 60分钟预测：平均 **88.4%**
+- 15分钟预测：平均 **95.95%**（最优 PEMS-BAY: 98.8%）
+- 30分钟预测：平均 **94.45%**（最优 PEMS-BAY: 98.4%）
+- 60分钟预测：平均 **90.42%**（最优 PEMS-BAY: 95.3%）
 
 ✅ 所有数据集均**超过系统要求的 ≥85% 精度指标**`;
   }
@@ -703,14 +712,15 @@ STGNN 预测模型在各数据集上的评估结果：
   }
 
   if (q.includes('洛杉矶') || q.includes('los angeles') || q.includes('la')) {
-    return `**[PEMS03 - 洛杉矶地区详情]**
+    return `**[METR-LA - 洛杉矶县详情]**
 
 🌆 **区域概况**
-洛杉矶高速公路网络是全美最繁忙的公路系统之一，覆盖约6,500平方公里都市区。
+洛杉矶县高速公路网络是全美最繁忙的公路系统之一，覆盖约6,500平方公里都市区。
 
 📍 **数据覆盖**
-- **358个检测传感器**，分布于 I-5、I-10、I-405、US-101、I-110、I-210 等主要高速
-- 监测数据：交通流量（辆/5min）+ 车速（km/h）+ 占有率
+- **207个检测传感器**，分布于 I-5、I-10、I-405、US-101、I-110、I-210 等主要高速
+- 监测数据：交通速度（mph）
+- 时间范围：2012年3月1日 ~ 2012年6月30日
 - 采集频率：**5分钟间隔**，共计 26,208 条时序记录
 
 ⚠️ **拥堵特征**
@@ -718,19 +728,20 @@ STGNN 预测模型在各数据集上的评估结果：
 - 晚高峰（16-19时）：全路网范围性拥堵，蔓延至二级道路
 - 常发性拥堵占比约 **68%**，周一/周五最突出
 
-🔬 **STGNN 训练结论**
-模型充分学习洛杉矶网络拓扑特征，在早晚高峰短期预测上表现最优 (MAPE 7.8%)`;
+🔬 **MST-ATG 训练结论**
+模型充分学习洛杉矶网络拓扑特征，在早晚高峰短期预测上表现优异 (MAPE 5.17%)`;
   }
 
   if (q.includes('旧金山') || q.includes('san francisco') || q.includes('sf') || q.includes('湾区')) {
-    return `**[PEMS04 - 旧金山湾区详情]**
+    return `**[PEMS-BAY - 旧金山湾区详情]**
 
 🌉 **区域概况**
 旧金山湾区是全美最重要的科技经济中心，I-80 海湾大桥（Bay Bridge）是区域主要动脉。
 
 📍 **数据覆盖**
-- **307个检测传感器**，覆盖 I-80、US-101、I-880、I-580、I-280、I-680
-- 冬季数据（1-2月），交通规律相对稳定，受天气影响较小
+- **325个检测传感器**，覆盖 I-80、US-101、I-880、I-580、I-280、I-680
+- 监测数据：交通速度（mph）
+- 时间范围：2017年1月1日 ~ 2017年5月31日
 
 ⚠️ **拥堵特征**
 - Bay Bridge 入口（每日早高峰）是最大拥堵瓶颈节点
@@ -738,7 +749,7 @@ STGNN 预测模型在各数据集上的评估结果：
 - 偶发性拥堵（事故）比例约 **35%**，高于洛杉矶
 
 🔬 **模型表现**
-PEMS04 数据集上 STGNN 准确率最高达 **92.8%**，月平均误差最小（MAE=7.85）`;
+PEMS-BAY 数据集上 MST-ATG 准确率最高达 **98.4%**，月平均误差最小（MAE=0.85）`;
   }
 
   // Default response
@@ -749,15 +760,15 @@ PEMS04 数据集上 STGNN 准确率最高达 **92.8%**，月平均误差最小�
 🤖 **我可以回答以下问题：**
 - **交通预测**：输入"预测"查看实时15/30/60分钟路网预测
 - **拥堵分析**：输入"拥堵"查看溯源分析与传导路径
-- **数据集信息**：输入"数据"了解PEMS数据集详情
+- **数据集信息**：输入"数据"了解交通数据集详情
 - **Agent状态**：输入"智能体"查看6类Agent运行状况
-- **模型精度**：输入"准确率"查看STGNN模型评估报告
+- **模型精度**：输入"准确率"查看MST-ATG模型评估报告
 - **仿真结果**：输入"仿真"查看SUMO验证结果
 - **地区详情**：输入"洛杉矶"或"旧金山"查看区域分析
 
 💡 **当前系统状态**：所有模块运行正常，实时数据延迟 <3s，模型预测准确率 ≥92%
 
-*请继续提问，我将基于 PEMS 数据集为您提供详细分析...*`;
+*请继续提问，我将基于 METR-LA、PEMS-BAY、PeMS07、PeMS08 数据集为您提供详细分析...*`;
 }
 
 // ============================================================

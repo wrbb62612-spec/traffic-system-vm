@@ -114,19 +114,19 @@ export default function Header({ activeTab, onTabChange, enableExternalMonitor =
   const [kpi, setKpi] = useState(REAL_TIME_KPI);
   const tabs = enableExternalMonitor
     ? [
-        ...BASE_TABS,
-        {
-          id: 'external-monitor',
-          label: '抓取监控',
-          icon: (
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M3 12h5l2 5 4-10 2 5h5" />
-              <circle cx="6" cy="6" r="2" />
-              <circle cx="18" cy="18" r="2" />
-            </svg>
-          ),
-        },
-      ]
+      ...BASE_TABS,
+      {
+        id: 'external-monitor',
+        label: '抓取监控',
+        icon: (
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M3 12h5l2 5 4-10 2 5h5" />
+            <circle cx="6" cy="6" r="2" />
+            <circle cx="18" cy="18" r="2" />
+          </svg>
+        ),
+      },
+    ]
     : BASE_TABS;
 
   // Simulate real-time KPI updates
@@ -340,10 +340,10 @@ export default function Header({ activeTab, onTabChange, enableExternalMonitor =
       }}>
         <span style={{ flexShrink: 0, color: 'var(--text-muted)', marginRight: 10 }}>数据源:</span>
         {[
-          { name: 'PEMS03·洛杉矶', count: 358, color: '#00c3ff', status: 'online' },
-          { name: 'PEMS04·旧金山湾区', count: 307, color: '#39ff6a', status: 'online' },
-          { name: 'PEMS07·加州第七区', count: 883, color: '#ff9500', status: 'online' },
-          { name: 'PEMS08·圣贝纳迪诺', count: 170, color: '#b24bff', status: 'online' },
+          { name: 'METR-LA·洛杉矶县', count: 207, color: '#00c3ff', status: 'online' },
+          { name: 'PEMS-BAY·旧金山湾区', count: 325, color: '#39ff6a', status: 'online' },
+          { name: 'PeMS07·加州洛杉矶地区', count: 883, color: '#ff9500', status: 'online' },
+          { name: 'PeMS08·圣贝纳迪诺', count: 170, color: '#b24bff', status: 'online' },
         ].map((ds, i) => (
           <span key={ds.name} style={{
             display: 'flex', alignItems: 'center', gap: 5,
@@ -361,7 +361,7 @@ export default function Header({ activeTab, onTabChange, enableExternalMonitor =
           </span>
         ))}
         <div style={{ flex: 1 }} />
-        <span style={{ color: '#39ff6a' }}>STGNN 模型推理中</span>
+        <span style={{ color: '#39ff6a' }}>MST-ATG 模型推理中</span>
         <span style={{ margin: '0 10px', color: 'var(--border-subtle)' }}>|</span>
         <span>数据刷新延迟 &lt;3s</span>
         <span style={{ margin: '0 10px', color: 'var(--border-subtle)' }}>|</span>
